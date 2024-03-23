@@ -40,7 +40,6 @@ public class Visualizer {
     BlockVector3 point2 = BlockVector3.at(playerX + 50, playerY, playerZ + 50);
     ProtectedCuboidRegion regionToCheck = new ProtectedCuboidRegion("_dummy342513", point1, point2);
     regionToCheck.getIntersectingRegions(rgManager.getRegions().values()).forEach(rg -> {
-      //int[][] regionBoundaries = getRegionPerimeters(rg.getMaximumPoint(), rg.getMinimumPoint());
       int[][] regionBoundaries = getRegionSlice(rg.getMaximumPoint(), rg.getMinimumPoint());
       Queue<BlockVector3> particleCoords;
       if (!playerParticleCoords.containsKey(player.getName())) {
@@ -49,17 +48,12 @@ public class Visualizer {
       } else {
         particleCoords = playerParticleCoords.get(player.getName());
       }
-
       int countBlocksNear = 0;
       int playerRadius = 50;
       Queue<BlockVector3> regionPerimeterCoords = new LinkedList<>();
       for (int[] coord : regionBoundaries) {
-        if (getDistance(coord, playerPoint) < playerRadius /*&& (playerPoint[1] > coord[1] - 2 && playerPoint[1] < coord[1] + 3)*/) {
-          if (!particleCoords.contains(BlockVector3.at(coord[0], playerPoint[1], coord[1]))) {
-            regionPerimeterCoords.add(BlockVector3.at(coord[0], playerPoint[1], coord[1]));
-          }
-          //countBlocksNear++;
-          //if(bukkitWorld.getBlockAt(coord[0],coord[1],coord[2]).getType().equals(Material.AIR))
+        if (getDistance(coord, playerPoint) < playerRadius && !particleCoords.contains(BlockVector3.at(coord[0], playerPoint[1], coord[1]))) {
+          regionPerimeterCoords.add(BlockVector3.at(coord[0], playerPoint[1], coord[1]));
         }
       }
       particleCoords.addAll(regionPerimeterCoords);
@@ -67,8 +61,7 @@ public class Visualizer {
   }
 
   public static double getDistance(int[] point1, int[] point2) {
-    double distance = Math.sqrt((squareInts(point1[0] - point2[0]) + squareInts(point1[1] - point2[2])));
-    return distance;
+    return Math.sqrt((squareInts(point1[0] - point2[0]) + squareInts(point1[1] - point2[2])));
   }
 
   public static int squareInts(int toSquare) {
@@ -95,17 +88,7 @@ public class Visualizer {
   }
 
   public static int[][] getRegionPerimeters(BlockVector3 maxPoint, BlockVector3 minPoint) {
-    int x1, x2, y1, y2, z1, z2, length, width, height, surfaceArea;
-    x1 = maxPoint.getX();
-    y1 = maxPoint.getY();
-    z1 = maxPoint.getZ();
-    x2 = minPoint.getX();
-    y2 = minPoint.getY();
-    z2 = minPoint.getZ();
-    length = x1 - x2;
-    width = z1 - z2;
-    height = y1 - y2;
-    surfaceArea = (2 * length * width) + (2 * length * height) + (2 * height * width);
+    int x1 = maxPoint.getX(), x2 = minPoint.getX(), y1 = maxPoint.getY(), y2 = minPoint.getY(), z1 = maxPoint.getZ(), z2 = minPoint.getZ(), length = x1 - x2, width = z1 - z2, height = y1 - y2, surfaceArea = (2 * length * width) + (2 * length * height) + (2 * height * width);
     int[][] coordinateArray = new int[surfaceArea][3];
     int arrayIndex = 0;
     int tempX = x2;
@@ -131,34 +114,22 @@ public class Visualizer {
       tempY = y1;
       tempZ = z1;
     }
-
     return coordinateArray;
   }
 
   public static Location getBestSpawnLocation(org.bukkit.World world, int x, int y, int z) {
-    Block block;
     if (world.getBlockAt(x, y, z).getType().equals(Material.AIR)) {
       if (world.getBlockAt(x, y - 1, z).getType().equals(Material.AIR)) {
-        if (world.getBlockAt(x, y - 2, z).getType().equals(Material.AIR)) {
-          return world.getBlockAt(x, y - 2, z).getLocation();
-        } else {
-          return world.getBlockAt(x, y - 1, z).getLocation();
-        }
-      } else {
-        return world.getBlockAt(x, y, z).getLocation();
+        return world.getBlockAt(x, y - 2, z).getType().equals(Material.AIR) ? world.getBlockAt(x, y - 2, z).getLocation() : world.getBlockAt(x, y - 1, z).getLocation();
       }
+      return world.getBlockAt(x, y, z).getLocation();
     }
-
     if (world.getBlockAt(x, y + 1, z).getType().equals(Material.AIR)) {
       return world.getBlockAt(x, y + 1, z).getLocation();
     }
     if (world.getBlockAt(x, y + 2, z).getType().equals(Material.AIR)) {
       return world.getBlockAt(x, y + 1, z).getLocation();
     }
-    if (world.getBlockAt(x, y + 3, z).getType().equals(Material.AIR)) {
-      return world.getBlockAt(x, y + 1, z).getLocation();
-    } else {
-      return null;
-    }
+    return world.getBlockAt(x, y + 3, z).getType().equals(Material.AIR) ? world.getBlockAt(x, y + 1, z).getLocation() : null;
   }
 }

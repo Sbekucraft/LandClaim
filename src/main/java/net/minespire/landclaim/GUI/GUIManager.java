@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class GUIManager {
 
-  private static GUIManager inst = new GUIManager();
+  private static final GUIManager inst = new GUIManager();
   public static Map<String, Flag> editableClaimFlags = new LinkedHashMap<>();
 
   static {
@@ -93,24 +93,15 @@ public class GUIManager {
     Collections.sort(ownerPlots);
     allClaims.addAll(ownerRegions);
     allClaims.addAll(ownerPlots);
-
     List<String> memberRegions = Claim.getClaimListMember(player, false);
     List<String> memberPlots = Claim.getClaimListMember(player, true);
-
     memberRegions.removeIf(allClaims::contains);
     memberPlots.removeIf(allClaims::contains);
-
     Collections.sort(memberRegions);
     Collections.sort(memberPlots);
     allClaims.addAll(memberRegions);
     allClaims.addAll(memberPlots);
-
-
-    int totalSlots = ((int) Math.ceil(allClaims.size() / 7d) + 2) * 9;
-    if (totalSlots > 54) {
-      totalSlots = 54;
-    }
-
+    int totalSlots = Math.min(((int) Math.ceil(allClaims.size() / 7d) + 2) * 9, 54);
     NGUI allClaimsGUI = new NGUI(totalSlots, "LandClaim Claims - Page " + (numRegionsToSkip / 28 + 1));
     if (numRegionsToSkip > 0) {
       allClaimsGUI.addItem(Material.PAPER, ChatColor.GOLD + "Previous Page", null, 48);

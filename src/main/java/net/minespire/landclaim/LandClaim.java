@@ -31,9 +31,7 @@ public class LandClaim extends JavaPlugin {
   public static WorldEdit we;
   public static WorldGuard wg;
   public static StringFlag LandClaimRegionFlag;
-
   public static Map<String, Claim> claimMap;
-
   public static Economy econ = null;
 
   public void onLoad() {
@@ -55,7 +53,6 @@ public class LandClaim extends JavaPlugin {
     this.loadConfiguration();
     getServer().getPluginManager().registerEvents(new GUIClick(), this);
     getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
-    //getServer().getPluginManager().registerEvents(new DeedListener(), this);
     this.getCommand("lc").setTabCompleter(new CommandCompleter());
     this.getCommand("lc").setExecutor(new MainCommand());
     we = WorldEdit.getInstance();
@@ -67,10 +64,9 @@ public class LandClaim extends JavaPlugin {
     if (!setupEconomy()) {
       log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
       getServer().getPluginManager().disablePlugin(this);
-      return;
+    } else {
+      this.getLogger().info("LandClaim Enabled.");
     }
-
-    this.getLogger().info("LandClaim Enabled.");
   }
 
   public void onDisable() {
@@ -96,7 +92,8 @@ public class LandClaim extends JavaPlugin {
     if (rsp == null) {
       return false;
     }
-    return rsp.getProvider() != null;
+    econ = rsp.getProvider();
+    return econ != null;
   }
 
   public LandClaim getPlugin() {

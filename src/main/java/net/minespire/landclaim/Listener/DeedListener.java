@@ -43,24 +43,18 @@ public class DeedListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onDeedClick(PlayerInteractEvent click) {
-		if (!click.getAction().equals(Action.RIGHT_CLICK_AIR) && !click.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-			return;
-		}
-		if (!click.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.PAPER)) {
-			return;
-		}
-
-    itemInHand = click.getPlayer().getInventory().getItemInMainHand();
-    player = click.getPlayer();
-
-    if (isDeed()) {
-      activateDeedNewOwner();
-      return;
+    if ((click.getAction().equals(Action.RIGHT_CLICK_AIR) || click.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && click.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.PAPER)) {
+      this.itemInHand = click.getPlayer().getInventory().getItemInMainHand();
+      this.player = click.getPlayer();
+      if (this.isDeed()) {
+        this.activateDeedNewOwner();
+      } else {
+        this.blankDeed = this.isBlankDeed();
+        if (this.blankDeed) {
+          this.createDeed();
+        }
+      }
     }
-    blankDeed = isBlankDeed();
-		if (blankDeed) {
-			createDeed();
-		}
   }
 
   public boolean isDeed() {
@@ -69,9 +63,8 @@ public class DeedListener implements Listener {
 			regionName = itemToCheckMeta.getCustomTagContainer().getCustomTag(regionNameKey, ItemTagType.STRING);
 			worldName = itemToCheckMeta.getCustomTagContainer().getCustomTag(worldNameKey, ItemTagType.STRING);
 			return true;
-		} else {
-			return false;
 		}
+    return false;
   }
 
   public boolean isBlankDeed() {
@@ -79,24 +72,19 @@ public class DeedListener implements Listener {
 		if (itemToCheckMeta.getCustomTagContainer().hasCustomTag(regionNameKey, ItemTagType.STRING)) {
 			regionName = itemToCheckMeta.getCustomTagContainer().getCustomTag(blankDeedKey, ItemTagType.STRING);
 			return true;
-		} else {
-			return false;
 		}
+    return false;
   }
 
   public void activateDeedNewOwner() {
     Claim claim = new Claim(player, regionName, worldName);
-    Set<UUID> owners = claim.getRegionOwners(regionName, worldName);
+    Set<UUID> owners = Claim.getRegionOwners(regionName, worldName);
     for (UUID owner : owners) {
       if (player.getUniqueId().equals(owner)) {
         player.sendMessage("You are already an owner of this region!");
         return;
       }
     }
-    //GUI deedActivationGUI = new GUI(player, regionName);
-
-    //deedActivationGUI.makeActivateDeedGUI();
-    //deedActivationGUI.openGUI();
   }
 
   public ItemStack createDeed() {

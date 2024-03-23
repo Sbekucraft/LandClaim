@@ -37,47 +37,34 @@ public class CommandCompleter implements TabCompleter {
   @Override
   public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
     if (args.length == 1) {
-      final List<String> completions = new ArrayList<>();
-      StringUtil.copyPartialMatches(args[0], COMMANDS, completions);
-      Collections.sort(completions);
-      return completions;
+      List<String> rgNames = new ArrayList<>();
+      StringUtil.copyPartialMatches(args[0], COMMANDS, rgNames);
+      Collections.sort(rgNames);
+      return rgNames;
     }
     if (args[0].equalsIgnoreCase("claim")) {
-      if (args.length == 2) {
-        return REGIONNAME;
-      } else {
-        return BLANKLIST;
-      }
-    } else if (args[0].equalsIgnoreCase("claimplot")) {
-      if (args.length == 2) {
-        return PLOTNAME;
-      } else {
-        return BLANKLIST;
-      }
-    } else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("inspect")) {
-      if (!(sender instanceof Player)) {
-        return BLANKLIST;
-      }
-      List<String> rgNames = new ArrayList<>();
-      Claim.getClaimListOwner((Player) sender, false).forEach(region -> rgNames.add(region));
-      Claim.getClaimListOwner((Player) sender, true).forEach(region -> rgNames.add(region));
-      if (args.length == 2) {
-        return rgNames;
-      } else {
-        return BLANKLIST;
-      }
-    } else if (args[0].equalsIgnoreCase("teleport")) {
-      if (!(sender instanceof Player)) {
-        return BLANKLIST;
-      }
-      List<String> rgNames = new ArrayList<>();
-      rgNames.addAll(Claim.getClaimListOwner((Player) sender, false));
-      rgNames.addAll(Claim.getClaimListOwner((Player) sender, true));
-      rgNames.addAll(Claim.getClaimListMember((Player) sender, false));
-      rgNames.addAll(Claim.getClaimListMember((Player) sender, true));
-      return rgNames;
-    } else {
+      return args.length == 2 ? REGIONNAME : BLANKLIST;
+    }
+    if (args[0].equalsIgnoreCase("claimplot")) {
+      return args.length == 2 ? PLOTNAME : BLANKLIST;
+    }
+    if (!(sender instanceof Player)) {
       return BLANKLIST;
     }
+    if (!args[0].equalsIgnoreCase("remove") && !args[0].equalsIgnoreCase("inspect")) {
+      if (args[0].equalsIgnoreCase("teleport")) {
+        List<String> rgNames = new ArrayList<>();
+        rgNames.addAll(Claim.getClaimListOwner((Player) sender, false));
+        rgNames.addAll(Claim.getClaimListOwner((Player) sender, true));
+        rgNames.addAll(Claim.getClaimListMember((Player) sender, false));
+        rgNames.addAll(Claim.getClaimListMember((Player) sender, true));
+        return rgNames;
+      }
+      return BLANKLIST;
+    }
+    List<String> rgNames = new ArrayList<>();
+    rgNames.addAll(Claim.getClaimListOwner((Player) sender, false));
+    rgNames.addAll(Claim.getClaimListOwner((Player) sender, true));
+    return args.length == 2 ? rgNames : BLANKLIST;
   }
 }

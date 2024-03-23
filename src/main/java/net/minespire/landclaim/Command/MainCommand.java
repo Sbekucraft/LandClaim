@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MainCommand implements CommandExecutor {
   private Player player = null;
   private boolean isPlayer = false;
-  private GUIManager guiManager = GUIManager.getInst();
+  private final GUIManager guiManager = GUIManager.getInst();
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -34,14 +34,12 @@ public class MainCommand implements CommandExecutor {
       player = (Player) sender;
       isPlayer = true;
     }
-
     if (args.length < 1) {
       if (isPlayer) {
         GUIManager.getInst().openMainGUI(player);
       }
       return true;
     }
-
     try {
       switch (args[0].toLowerCase()) {
         case "gui":
@@ -66,12 +64,10 @@ public class MainCommand implements CommandExecutor {
               player.sendMessage(ChatColor.GOLD + "That is not a valid region name.");
               return true;
             }
-
             Claim claim = new Claim(player, args[1]);
             if (!claim.createClaim()) {
               return true;
             }
-
             if (claim.overlapsUnownedRegion()) {
               player.sendMessage(ChatColor.GOLD + "Your selection overlaps a region belonging to someone else!");
               return true;
@@ -84,24 +80,11 @@ public class MainCommand implements CommandExecutor {
               return true;
             }
             LandClaim.claimMap.put(player.getUniqueId().toString(), claim);
-
             NGUI claimGUI = new NGUI(36, "LandClaim Claim Region");
             claimGUI.addItem(Material.GRASS_BLOCK, ChatColor.translateAlternateColorCodes('&', "&3Are You Sure You Want To Claim This Region?"), guiManager.parseLoreString(Claim.parsePlaceholders("&5Region Name: &f{RegionName}|&5Region Cost: &f{RegionCost}|&5Region Size: &f{RegionLength} x {RegionHeight} x {RegionWidth}|&aClick to confirm purchase.", claim)), 13);
             claimGUI.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
             claimGUI.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
             claimGUI.open(player);
-
-
-//						GUI gui = new GUI(LandClaim.plugin.getConfig().getInt("GUI.Slots"));
-//						gui.setInventory(LandClaim.plugin.getConfig().getString("GUI.ClaimRegion.Title"));
-//						GUI.GUIItem claimItem = gui.new GUIItem(Material.getMaterial(LandClaim.plugin.getConfig().getString("GUI.ClaimRegion.ClaimItem.Material")));
-//						gui.setPlayer(player);
-//						gui.addGUIItem(claimItem.setDisplayName(Claim.parsePlaceholders(LandClaim.plugin.getConfig().getString("GUI.ClaimRegion.ClaimItem.ItemName"), claim))
-//								.setLore(Claim.parsePlaceholders(LandClaim.plugin.getConfig().getString("GUI.ClaimRegion.ClaimItem.Lore"), claim))
-//								.setSlot(LandClaim.plugin.getConfig().getInt("GUI.ClaimRegion.ClaimItem.Slot")-1)
-//								.setMeta());
-//
-//						gui.openGUI();
           } else {
             sender.sendMessage("You must be a player to use that command!");
           }
@@ -119,17 +102,14 @@ public class MainCommand implements CommandExecutor {
               player.sendMessage(ChatColor.RED + "You don't have permission to claim in this world.");
               return true;
             }
-
             if (!ProtectedRegion.isValidId(args[1])) {
               player.sendMessage(ChatColor.GOLD + "That is not a valid plot name.");
               return true;
             }
-
             Claim claim = new Claim(player, args[1], true);
             if (!claim.createClaim()) {
               return true;
             }
-
             if (!claim.insideOwnedRegion()) {
               player.sendMessage(ChatColor.GOLD + "You may only claim a plot inside a region that you own.");
               return true;
@@ -143,24 +123,11 @@ public class MainCommand implements CommandExecutor {
               return true;
             }
             LandClaim.claimMap.put(player.getUniqueId().toString(), claim);
-
-
             NGUI claimGUI = new NGUI(36, "LandClaim Claim Plot");
             claimGUI.addItem(Material.DIRT, ChatColor.translateAlternateColorCodes('&', "&3Are You Sure You Want To Claim This Plot?"), guiManager.parseLoreString(Claim.parsePlaceholders("&5Region Name: &f{RegionName}|&5Region Cost: &f{RegionCost}|&5Region Size: &f{RegionLength} x {RegionHeight} x {RegionWidth}|&aClick to confirm purchase.", claim)), 13);
             claimGUI.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
             claimGUI.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
             claimGUI.open(player);
-
-//						GUI gui = new GUI(LandClaim.plugin.getConfig().getInt("GUI.Slots"));
-//						gui.setInventory(LandClaim.plugin.getConfig().getString("GUI.ClaimPlot.Title"));
-//						GUI.GUIItem claimItem = gui.new GUIItem(Material.getMaterial(LandClaim.plugin.getConfig().getString("GUI.ClaimPlot.ClaimItem.Material")));
-//						gui.setPlayer(player);
-//						gui.addGUIItem(claimItem.setDisplayName(Claim.parsePlaceholders(LandClaim.plugin.getConfig().getString("GUI.ClaimPlot.ClaimItem.ItemName"), claim))
-//								.setLore(Claim.parsePlaceholders(LandClaim.plugin.getConfig().getString("GUI.ClaimPlot.ClaimItem.Lore"), claim))
-//								.setSlot(LandClaim.plugin.getConfig().getInt("GUI.ClaimPlot.ClaimItem.Slot")-1)
-//								.setMeta());
-//
-//						gui.openGUI();
           } else {
             sender.sendMessage("You must be a player to use that command!");
           }
@@ -188,24 +155,20 @@ public class MainCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You don't have permission to do that!");
             return true;
           }
-
           String playerName = player.getName();
           Player nPlayer = Bukkit.getPlayer(player.getName());
-          if (Visualizer.seeNearbyBukkitTask.containsKey(playerName)) {
-            if (Visualizer.seeNearbyAsyncService.containsKey(playerName)) {
-              Bukkit.getScheduler().cancelTask(Visualizer.seeNearbyBukkitTask.get(playerName));
-              Visualizer.seeNearbyAsyncService.get(playerName).shutdown();
-              Visualizer.seeNearbyBukkitTask.remove(playerName);
-              Visualizer.seeNearbyAsyncService.remove(playerName);
-              Visualizer.timer.remove(playerName);
-              nPlayer.sendMessage(ChatColor.GOLD + "Disabled nearby region viewing.");
-              return true;
-            }
+          if (Visualizer.seeNearbyBukkitTask.containsKey(playerName) && Visualizer.seeNearbyAsyncService.containsKey(playerName)) {
+            Bukkit.getScheduler().cancelTask(Visualizer.seeNearbyBukkitTask.get(playerName));
+            Visualizer.seeNearbyAsyncService.get(playerName).shutdown();
+            Visualizer.seeNearbyBukkitTask.remove(playerName);
+            Visualizer.seeNearbyAsyncService.remove(playerName);
+            Visualizer.timer.remove(playerName);
+            nPlayer.sendMessage(ChatColor.GOLD + "Disabled nearby region viewing.");
+            return true;
           }
           AtomicInteger timer = new AtomicInteger(0);
           Visualizer.timer.put(playerName, timer);
           nPlayer.sendMessage(ChatColor.GOLD + "Enabled nearby region viewing.");
-
           try {
             Visualizer.seeNearbyAsyncService.put(playerName, Executors.newSingleThreadScheduledExecutor());
             final Runnable task = () -> {
@@ -220,7 +183,6 @@ public class MainCommand implements CommandExecutor {
           } catch (Throwable t) {
             t.printStackTrace();
           }
-
           BukkitRunnable bukkitTask = new BukkitRunnable() {
             Queue<BlockVector3> particleLocations = Visualizer.playerParticleCoords.get(playerName);
             int maxSeconds = 15;
@@ -231,10 +193,7 @@ public class MainCommand implements CommandExecutor {
               ticks++;
               if (particleLocations != null) {
                 int loops = Math.min(particleLocations.size(), 400);
-                for (int i = 0; i < loops; i++) {
-                  if (particleLocations == null) {
-                    break;
-                  }
+                for (int i = 0; i < loops && particleLocations != null; i++) {
                   BlockVector3 loc = particleLocations.remove();
                   Location location = Visualizer.getBestSpawnLocation(nPlayer.getWorld(), loc.getX(), loc.getY(), loc.getZ());
                   if (location != null) {
@@ -292,9 +251,8 @@ public class MainCommand implements CommandExecutor {
             if (regionOwners.contains(player.getUniqueId()) || player.hasPermission("landclaim.delete.others")) {
               guiManager.promptForRemoval(player.getName(), args[1].split(",")[0], args[1].split(",")[1]);
               return true;
-            } else {
-              player.sendMessage(ChatColor.RED + "You don't own that region.");
             }
+            player.sendMessage(ChatColor.RED + "You don't own that region.");
           } else {
             player.sendMessage(ChatColor.GOLD + "Invalid Region");
           }
@@ -349,9 +307,8 @@ public class MainCommand implements CommandExecutor {
           if ((ownerOrMember != null && player.hasPermission("landclaim.inspect.own")) || player.hasPermission("landclaim.inspect.others")) {
             guiManager.openClaimInspector(player, args[1].split(",")[0], args[1].split(",")[1]);
             return true;
-          } else {
-            player.sendMessage(ChatColor.GOLD + "You cannot inspect that region.");
           }
+          player.sendMessage(ChatColor.GOLD + "You cannot inspect that region.");
           break;
         case "vote":
           if (!(sender instanceof Player)) {
@@ -364,7 +321,7 @@ public class MainCommand implements CommandExecutor {
           }
           if (args.length < 2) {
             List<ProtectedRegion> regionsList = Claims.getRegionsAtLocation(player.getLocation());
-            if (regionsList.size() == 0) {
+            if (regionsList.isEmpty()) {
               player.sendMessage(ChatColor.GOLD + "You are not standing in any regions. /lc vote [REGION] to vote for a region.");
               return true;
             }
@@ -380,70 +337,58 @@ public class MainCommand implements CommandExecutor {
               player.sendMessage(ChatColor.GOLD + "Vote registered successfully!");
               return true;
             }
-            if (regionsList.size() > 1) {
-              String message = ChatColor.GOLD + "You are standing in regions: ";
-              StringBuilder extraMessage = new StringBuilder();
-              for (ProtectedRegion region : regionsList) {
-                extraMessage.append(region.getId()).append(", ");
-              }
-              extraMessage.delete(extraMessage.length() - 2, extraMessage.length());
-              player.sendMessage(message + extraMessage + ".");
-              player.sendMessage(ChatColor.GOLD + "/lc vote [REGION] to pick which region");
+            String message = ChatColor.GOLD + "You are standing in regions: ";
+            StringBuilder extraMessage = new StringBuilder();
+            for (ProtectedRegion region : regionsList) {
+              extraMessage.append(region.getId()).append(", ");
             }
+            extraMessage.delete(extraMessage.length() - 2, extraMessage.length());
+            player.sendMessage(message + extraMessage + ".");
+            player.sendMessage(ChatColor.GOLD + "/lc vote [REGION] to pick which region");
             return true;
-          } else {
-            ProtectedRegion region = Claims.getRegionByName(args[1], BukkitAdapter.adapt(player.getWorld()));
-            if (region != null) {
-              VoteFile voteFile = VoteFile.get();
-              Vote lastVote = voteFile.getLatestVote(region.getId(), player.getWorld().getName(), player.getUniqueId().toString());
-              if (lastVote != null && !lastVote.dayHasPassed()) {
-                player.sendMessage(ChatColor.GOLD + "You must wait " + (1 - lastVote.daysSinceLastVote()) + " days before vote for that region again");
-                return true;
-              }
-              VoteFile.get().addVote(region.getId(), player.getWorld().getName(), player.getUniqueId().toString()).save();
-              VoteRegion.addVote(region.getId() + "," + player.getWorld().getName());
-              player.sendMessage(ChatColor.GOLD + "Vote registered successfully!");
-              return true;
-            } else {
-              player.sendMessage(ChatColor.GOLD + "That is not a valid region.");
-            }
           }
+          ProtectedRegion region = Claims.getRegionByName(args[1], BukkitAdapter.adapt(player.getWorld()));
+          if (region != null) {
+            VoteFile voteFile = VoteFile.get();
+            Vote lastVote = voteFile.getLatestVote(region.getId(), player.getWorld().getName(), player.getUniqueId().toString());
+            if (lastVote != null && !lastVote.dayHasPassed()) {
+              player.sendMessage(ChatColor.GOLD + "You must wait " + (1 - lastVote.daysSinceLastVote()) + " days before vote for that region again");
+              return true;
+            }
+            VoteFile.get().addVote(region.getId(), player.getWorld().getName(), player.getUniqueId().toString()).save();
+            VoteRegion.addVote(region.getId() + "," + player.getWorld().getName());
+            player.sendMessage(ChatColor.GOLD + "Vote registered successfully!");
+            return true;
+          }
+          player.sendMessage(ChatColor.GOLD + "That is not a valid region.");
           break;
-				/*
-				case "blankdeed":
-					if (player != null) {
-						player.getInventory().addItem(DeedListener.getBlankDeed());
-					} else sender.sendMessage("You must be a player to use that command!");
-					break;*/
         default:
           return false;
       }
     } catch (IndexOutOfBoundsException e) {
       return false;
     }
-
     return true;
   }
 
   public boolean meetsClaimLimits(Claim claim) {
-    if (claim.isPlot()) {
-      return true;
-    } else {
+    if (!claim.isPlot()) {
       int area = claim.getClaimArea();
       int length = claim.getClaimLength();
       int width = claim.getClaimWidth();
       if (area < LandClaim.plugin.getConfig().getInt("Claims.Regions.MinSize")) {
         player.sendMessage(ChatColor.GOLD + "Your selection is too small!");
         return false;
-      } else if (area > LandClaim.plugin.getConfig().getInt("Claims.Regions.MaxSize")) {
+      }
+      if (area > LandClaim.plugin.getConfig().getInt("Claims.Regions.MaxSize")) {
         player.sendMessage(ChatColor.GOLD + "Your selection is too large!");
         return false;
-      } else if ((length / width) > LandClaim.plugin.getConfig().getDouble("Claims.Regions.MaxLWRatio") || (width / length) > LandClaim.plugin.getConfig().getDouble("Claims.Regions.MaxLWRatio")) {
+      }
+      if (((double) length / width) > LandClaim.plugin.getConfig().getDouble("Claims.Regions.MaxLWRatio") || ((double) width / length) > LandClaim.plugin.getConfig().getDouble("Claims.Regions.MaxLWRatio")) {
         player.sendMessage(ChatColor.GOLD + "Your selection doesn't meet proportion requirements!");
         return false;
-      } else {
-        return true;
       }
     }
+    return true;
   }
 }

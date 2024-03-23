@@ -27,10 +27,8 @@ public class VoteFile {
 
   public static void load() {
     voteFile = new VoteFile();
-
     voteFile.pathString = "plugins/LandClaim/votes" + ".yml";
     voteFile.votesFilePath = Paths.get(voteFile.pathString);
-
     if (!Files.exists(voteFile.votesFilePath)) {
       try {
         Files.createFile(voteFile.votesFilePath);
@@ -80,26 +78,21 @@ public class VoteFile {
     if ((regionSection = yml.getConfigurationSection(regionSectionName)) == null) {
       return null;
     }
-
     List<String> previousVotes = new ArrayList<>();
     regionSection.getValues(false).forEach((timeStamp, voteUUID) -> {
       if (voteUUID.equals(playerUUID)) {
         previousVotes.add(timeStamp);
       }
     });
-
     if (previousVotes.isEmpty()) {
       return null;
     }
-
     String newestTimeStamp = previousVotes.get(0);
     for (String timeStamp : previousVotes) {
       if (LocalDateTime.parse(timeStamp).isAfter(LocalDateTime.parse(newestTimeStamp))) {
         newestTimeStamp = timeStamp;
       }
     }
-
-    //if(regionSection.getString(newestTimeStamp) == null) return null;
     return new Vote(regionName, worldName, playerUUID, LocalDateTime.parse(newestTimeStamp));
   }
 }

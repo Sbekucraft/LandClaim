@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VoteRegion {
-  private String regionCommaWorld;
-  private String regionName;
-  private String regionWorld;
+  private final String regionCommaWorld;
+  private final String regionName;
+  private final String regionWorld;
   private int votesThisYear;
   private int votesThisMonth;
   private int votesToday;
-  private static List<VoteRegion> voteRegionList = new ArrayList<>();
+  private static final List<VoteRegion> voteRegionList = new ArrayList<>();
 
   public VoteRegion(String regionCommaWorld) {
     this.regionCommaWorld = regionCommaWorld;
@@ -42,15 +42,11 @@ public class VoteRegion {
   public static void tallyVotesFor(String regionCommaWorld) {
     VoteFile voteFile = VoteFile.get();
     ConfigurationSection regionSection = voteFile.getYml().getConfigurationSection(regionCommaWorld);
-    VoteRegion voteRegion = voteRegionList
-      .stream()
-      .filter(a -> a.getRegionCommaWorld().equals(regionCommaWorld))
-      .findFirst()
-      .orElseGet(() -> {
-        VoteRegion vRegion = new VoteRegion(regionCommaWorld);
-        voteRegionList.add(vRegion);
-        return vRegion;
-      });
+    VoteRegion voteRegion = voteRegionList.stream().filter(a -> a.getRegionCommaWorld().equals(regionCommaWorld)).findFirst().orElseGet(() -> {
+      VoteRegion vRegion = new VoteRegion(regionCommaWorld);
+      voteRegionList.add(vRegion);
+      return vRegion;
+    });
     voteRegion.clearVotes();
     for (String vote : regionSection.getConfigurationSection("votes").getKeys(false)) {
       countVotes(voteRegion, vote);
@@ -64,15 +60,11 @@ public class VoteRegion {
   }
 
   public static void addVote(String regionCommaWorld) {
-    VoteRegion voteRegion = voteRegionList
-      .stream()
-      .filter(a -> a.getRegionCommaWorld().equals(regionCommaWorld))
-      .findFirst()
-      .orElseGet(() -> {
-        VoteRegion vRegion = new VoteRegion(regionCommaWorld);
-        voteRegionList.add(vRegion);
-        return vRegion;
-      });
+    VoteRegion voteRegion = voteRegionList.stream().filter(a -> a.getRegionCommaWorld().equals(regionCommaWorld)).findFirst().orElseGet(() -> {
+      VoteRegion vRegion = new VoteRegion(regionCommaWorld);
+      voteRegionList.add(vRegion);
+      return vRegion;
+    });
     voteRegion.votesThisYear++;
     voteRegion.votesThisMonth++;
     voteRegion.votesToday++;

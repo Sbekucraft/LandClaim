@@ -31,33 +31,31 @@ public class Prompt {
   }
 
   private void awaitResponse() {
-
     answer = null;
     playersWithPrompts.add(player.getName());
     serviceTaskID = Bukkit.getScheduler().runTaskTimer(LandClaim.plugin, () -> {
       ticksPassed += 5;
-        if (ticksPassed == 200 - 60 + 1) {
-            player.sendMessage(ChatColor.RED + "Prompt expires in..");
-        }
-        if (ticksPassed == 200 - 60 + 1) {
-            player.sendMessage(ChatColor.RED + "3");
-        }
-        if (ticksPassed == 200 - 40 + 1) {
-            player.sendMessage(ChatColor.RED + "2");
-        }
-        if (ticksPassed == 200 - 20 + 1) {
-            player.sendMessage(ChatColor.RED + "1");
-        }
+      if (ticksPassed == 200 - 60 + 1) {
+        player.sendMessage(ChatColor.RED + "Prompt expires in..");
+      }
+      if (ticksPassed == 200 - 60 + 1) {
+        player.sendMessage(ChatColor.RED + "3");
+      }
+      if (ticksPassed == 200 - 40 + 1) {
+        player.sendMessage(ChatColor.RED + "2");
+      }
+      if (ticksPassed == 200 - 20 + 1) {
+        player.sendMessage(ChatColor.RED + "1");
+      }
 
       if (answer != null || ticksPassed > 200) {
         Bukkit.getScheduler().cancelTask(serviceTaskID);
         playersWithPrompts.remove(player.getName());
         playerPrompts.remove(player.getName());
       }
-        if (answer == null && ticksPassed > 200) {
-            player.sendMessage(ChatColor.RED + "Prompt expired.");
-        }
-
+      if (answer == null && ticksPassed > 200) {
+        player.sendMessage(ChatColor.RED + "Prompt expired.");
+      }
     }, 1L, 5L).getTaskId();
   }
 
@@ -66,14 +64,14 @@ public class Prompt {
   }
 
   public boolean sendPrompt() {
-      if (hasActivePrompt(player)) {
-          return false;
-      } else {
-          player.sendMessage(promptMessage);
-          awaitResponse();
-          savePrompt(this);
-          return true;
-      }
+    if (hasActivePrompt(player)) {
+      return false;
+    } else {
+      player.sendMessage(promptMessage);
+      awaitResponse();
+      savePrompt(this);
+      return true;
+    }
   }
 
   public void setAnswer(String answer) {
