@@ -139,7 +139,6 @@ public class GUIClick implements Listener {
                   try {
                     Claim.removeRegion(player, regionName, worldName);
                   }catch(Exception e){}
-                  VoteRegion.removeRegion(regionName+","+worldName);
                   guiManager.openAllClaimsGUI(player);
                 } else if (ChatColor.stripColor(itemName).equalsIgnoreCase(LandClaim.plugin.getLocalizedString("GUI.Action_Back"))) {
                   guiManager.openClaimInspector(player, regionName, worldName);

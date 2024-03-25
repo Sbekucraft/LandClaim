@@ -53,17 +53,33 @@ Localization:
       Action_TeleportTo: Teleport to
       Action_Wand: Wand
       Action_Year: Year
+      Lore_ClaimLimitsDescription: '&fView your claim limits'
+      Lore_ClaimsDescription: '&fView and edit your|&fregions and plots'
       Lore_RegionDescription: '&5Region Name: &f{RegionName}|&5Region Cost: &f{RegionCost}|&5Region
         Size: &f{RegionLength} x {RegionHeight} x {RegionWidth}|&aClick to confirm
         purchase.'
+      Lore_RegionMembershipDescription: '&fThis will give the|&fplayer partial permissions|&fon this claim'
+      Lore_RegionOwnershipDescription: '&fThis will give the|&fplayer full permissions|&fon this claim'
+      Lore_RegionRemoveDescription: '&cWarning:|&fThis will permanently|&fremove your claim'
+      Lore_RemoveMemberDescription: '&fRemove Member: &b{PlayerName}|&7UUID:{PlayerUUID}'
+      Lore_RemoveOwnerDescription: '&fRemove Owner: &b{PlayerName}|&7UUID:{PlayerUUID}'
+      Lore_TeleportRemoveDescription: '&fRemove the teleport|&fpoint for &5{RegionName}&f'
+      Lore_TeleportSetDescription: '&fSet the teleport|&fpoint for &5 {RegionName} &f to|&fyour current location.'
+      Lore_TopDescription: '&fView top-voted regions'
+      Lore_WandDescription: '&fGet a claim wand'
       PopupTitle_ClaimPlot: Are You Sure You Want To Claim This Plot?
       PopupTitle_ClaimRegion: Are You Sure You Want To Claim This Region?
       Text_AllowedWorlds: '&3Allowed Claim Worlds'
+      Text_ClickToVisit: '&7Click to Visit'
       Text_Page: Page
       Text_Plots: '&3Plots'
       Text_PlotsLore: '&fAllowed: {AllowedPlots}|&fOwned: {OwnedPlots}|&fRemaining: {RemainingPlots}'
       Text_RegionLore: '&fAllowed: {AllowedRegions}|&fOwned: {OwnedRegions}|&fRemaining: {RemainingRegions}'
       Text_Regions: '&3Regions'
+      Text_World: '&fWorld: &9{WorldName}'
+      Text_VotesPastDay: '&3Votes (Past Day): '
+      Text_VotesPastMonth: '&3Votes (Past Month): '
+      Text_VotesPastYear: '&3Votes (Past Year): '
       Title_AddMember: Add Player to Claim
       Title_ClaimFlags: LandClaim Flags
       Title_ClaimInspector: LandClaim Inspector
@@ -188,18 +204,34 @@ Localization:
       Action_TeleportTo: Viaggia verso
       Action_Wand: Bacchetta di rivendicazione
       Action_Year: Anno
+      Lore_ClaimLimitsDescription: '&fVedi i limiti della tua rivendicazione'
+      Lore_ClaimsDescription: '&fVedi e modifica le tue|&regioni e volumi'
       Lore_RegionDescription: '&5Nome: &f{RegionName}|&5Costo: &f{RegionCost}|&5Dimensione:
         &f{RegionLength} x {RegionHeight} x {RegionWidth}|&aPremi per confermare l''acquisto.'
+      Lore_RegionMembershipDescription: '&fQuesto darà al|&fgiocatore permessi limitati|&fqu questa zona'
+      Lore_RegionOwnershipDescription: '&fQuesto darà al|&fgiocatore pieni permessi|&fqu questa zona'
+      Lore_RegionRemoveDescription: '&cAttenzione:|&fQuesto eliminerà permanentemente|&fla zona rivendicata'
+      Lore_RemoveMemberDescription: '&fRimuovi Membro: &b{PlayerName}|&7UUID:{PlayerUUID}'
+      Lore_RemoveOwnerDescription: '&fRimuovi Proprietario: &b{PlayerName}|&7UUID:{PlayerUUID}'
+      Lore_TeleportRemoveDescription: '&fRimuovi il punto di|&fviaggio rapido per &5{RegionName}&f'
+      Lore_TeleportSetDescription: '&fImposta il punto di|&viaggio rapido per &5 {RegionName} &f|&falla tua posizione attuale.'
+      Lore_TopDescription: '&fVedi le regioni più votate'
+      Lore_WandDescription: '&fOttieni un bastone di rivendicazione'
       PopupTitle_ClaimPlot: '&3Sei sicuro di voler rivendicare quest''area?'
       PopupTitle_ClaimRegion: '&3Sei sicuro di voler rivendicare questa regione?'
       Text_AllowedWorlds: '&3Mondi consentiti'
+      Text_ClickToVisit: '&7Clicca per visitare'
       Text_Page: Pagina
       Text_Plots: '&3Volumi'
       Text_PlotsLore: '&fConsentiti: {AllowedPlots}|&fPosseduti: {OwnedPlots}|&fRimanenti: {RemainingPlots}'
       Text_RegionLore: '&fConsentite: {AllowedRegions}|&fPossedute: {OwnedRegions}|&fRimanenti: {RemainingRegions}'
       Text_Regions: '&3Regioni'
+      Text_World: '&fMondo: &9{WorldName}'
+      Text_VotesPastDay: '&3Voti (Giornata): '
+      Text_VotesPastMonth: '&3Voti (Mese): '
+      Text_VotesPastYear: '&3Voti (Anno): '
       Title_AddMember: Aggiungi giocatore alla regione
-      Title_ClaimFlags: LandClaim Flags
+      Title_ClaimFlags: LandClaim Impostazioni
       Title_ClaimInspector: LandClaim Ispeziona
       Title_ClaimLimits: LandClaim Limiti dell'area
       Title_ClaimPlot: LandClaim Rivendica Area
@@ -278,5 +310,5 @@ Localization:
       Success_RemovedOwner: '&6Hai rimosso il proprietario &b{Player}&6 da &b{RegionName}&6.'
       Success_SetTeleport: '&6Hai impostato il punto di teletrasporto di &5{RegionName}&6.'
       Success_Teleport: '&6Viaggio rapido verso &5{RegionName}&6.'
-      Success_UnclaimedRegion: '&6Hai annullato la rivendicazione dell''area per &b{RegionCost}&6.'
+      Success_UnclaimedRegion: '&6Hai annullato la rivendicazione dell''area per &b{RegionCost} {CurrencySymbol}&6.'
       Success_VoteRegistered: '&6Voti registrati con successo'
