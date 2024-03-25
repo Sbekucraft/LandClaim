@@ -70,6 +70,17 @@ public class VoteRegion {
     voteRegion.votesToday++;
   }
 
+  public static void removeRegion(String regionCommaWorld) {
+    VoteRegion voteRegion = null;
+    try{
+      voteRegion = voteRegionList.stream().filter(a -> a.getRegionCommaWorld().equals(regionCommaWorld)).toList().get(0);
+    } catch(Exception e){ return; }
+    voteRegion.votesThisYear = 0;
+    voteRegion.votesThisMonth = 0;
+    voteRegion.votesToday = 0;
+    voteRegionList.remove(voteRegion);
+  }
+
   private static void countVotes(VoteRegion voteRegion, String vote) {
     LocalDateTime voteDateTime = LocalDateTime.parse(vote);
     LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);

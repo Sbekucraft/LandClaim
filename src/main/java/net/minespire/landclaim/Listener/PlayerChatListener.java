@@ -2,6 +2,7 @@ package net.minespire.landclaim.Listener;
 
 import net.minespire.landclaim.Claim.Claim;
 import net.minespire.landclaim.GUI.GUIManager;
+import net.minespire.landclaim.LandClaim;
 import net.minespire.landclaim.Prompt.Prompt;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,22 +24,22 @@ public class PlayerChatListener implements Listener {
       switch (prompt.getPromptType()) {
         case "ADDMEMBER":
           if (!Claim.addMember(player, chatMessage, prompt.getRegion())) {
-            player.sendMessage(ChatColor.RED + "Could not add member to region. Player must be online.");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_MemberOffline"));
           } else {
-            player.sendMessage(ChatColor.GOLD + "Added " + ChatColor.AQUA + Bukkit.getPlayer(chatMessage).getDisplayName() + ChatColor.GOLD + " as new member to claim " + ChatColor.AQUA + prompt.getRegion().getId());
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_MemberAdded").replace("{PlayerName}", Bukkit.getPlayer(chatMessage).getDisplayName()).replace("{RegionId}", prompt.getRegion().getId()));
           }
           break;
         case "ADDOWNER":
           if (!Claim.addOwner(player, chatMessage, prompt.getRegion())) {
-            player.sendMessage(ChatColor.RED + "Could not add owner to region. Player must be online.");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_OwnerOffline"));
           } else {
-            player.sendMessage(ChatColor.GOLD + "Added " + ChatColor.AQUA + Bukkit.getPlayer(chatMessage).getDisplayName() + ChatColor.GOLD + " as new owner to claim " + ChatColor.AQUA + prompt.getRegion().getId());
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_OwnerAdded").replace("{PlayerName}", Bukkit.getPlayer(chatMessage).getDisplayName()).replace("{RegionId}", prompt.getRegion().getId()));
           }
           break;
       }
       if (GUIManager.editableClaimFlags.keySet().contains(prompt.getPromptType())) {
         prompt.getRegion().setFlag(GUIManager.editableClaimFlags.get(prompt.getPromptType()), prompt.getAnswer());
-        player.sendMessage(ChatColor.GOLD + "The new value for '" + prompt.getPromptType() + "' was set on " + ChatColor.AQUA + prompt.getRegion().getId());
+        player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_FlagEdited").replace("{FlagName}", prompt.getPromptType() ).replace("{RegionId}", prompt.getRegion().getId()));
       }
     }
   }

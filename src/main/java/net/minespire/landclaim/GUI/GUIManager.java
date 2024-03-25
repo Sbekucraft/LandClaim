@@ -57,28 +57,34 @@ public class GUIManager {
   }
 
   public void openMainGUI(Player player) {
-    NGUI mainGUI = new NGUI(9, "LandClaim Main Menu");
-    mainGUI.addItem(Material.GRASS_BLOCK, colorize("&3Claims"), parseLoreString("&fView and edit your|&fregions and plots"));
-    mainGUI.addItem(Material.WOODEN_AXE, colorize("&3Wand"), parseLoreString("&fGet a claim wand"));
-    mainGUI.addItem(Material.OBSERVER, colorize("&3Claim Limits"), parseLoreString("&fView your claim limits"));
-    mainGUI.addItem(Material.EMERALD, colorize("&3Popular Regions"), parseLoreString("&fView top-voted regions"));
-    mainGUI.addItem(Material.BIRCH_DOOR, colorize("&6Close"), null, 8);
+    NGUI mainGUI = new NGUI(9, LandClaim.plugin.getLocalizedString("GUI.Title_MainMenu"));
+    mainGUI.addItem(Material.GRASS_BLOCK, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Claims")), parseLoreString("&fView and edit your|&fregions and plots"));
+    mainGUI.addItem(Material.WOODEN_AXE, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Wand")), parseLoreString("&fGet a claim wand"));
+    mainGUI.addItem(Material.OBSERVER, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_ClaimLimits")), parseLoreString("&fView your claim limits"));
+    mainGUI.addItem(Material.EMERALD, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_PopularRegions")), parseLoreString("&fView top-voted regions"));
+    mainGUI.addItem(Material.BIRCH_DOOR, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Close")), null, 8);
     mainGUI.open(player);
   }
 
   public void openClaimLimitsGUI(Player player) {
-    NGUI claimLimitsGUI = new NGUI(36, "LandClaim Claim Limits");
-    claimLimitsGUI.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
-    claimLimitsGUI.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
+    NGUI claimLimitsGUI = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_ClaimLimits"));
+    claimLimitsGUI.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+    claimLimitsGUI.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
     int numOwnedRegions, numOwnedPlots, numAllowedRegions, numAllowedPlots;
     numOwnedRegions = Claim.getClaimListOwner(player, false).size();
     numOwnedPlots = Claim.getClaimListOwner(player, true).size();
     numAllowedRegions = Claimer.getNumAllowedRegions(player);
     numAllowedPlots = Claimer.getNumAllowedPlots(player);
     String[] claimableWorlds = Claimer.claimableWorlds(player).stream().map(world -> colorize("&9" + world.getName())).collect(Collectors.toList()).toArray(new String[0]);
-    claimLimitsGUI.addItem(Material.FILLED_MAP, colorize("&3Allowed Claim Worlds"), createLore(claimableWorlds), 11);
-    claimLimitsGUI.addItem(Material.GRASS_BLOCK, colorize("&3Regions"), parseLoreString("&fAllowed: " + numAllowedRegions + "|&fOwned: " + numOwnedRegions + "|&fRemaining: " + (numAllowedRegions - numOwnedRegions)), 13);
-    claimLimitsGUI.addItem(Material.DIRT, colorize("&3Plots"), parseLoreString("&fAllowed: " + numAllowedPlots + "|&fOwned: " + numOwnedPlots + "|&fRemaining: " + (numAllowedPlots - numOwnedPlots)), 15);
+    claimLimitsGUI.addItem(Material.FILLED_MAP, colorize(LandClaim.plugin.getLocalizedString("GUI.Text_AllowedWorlds")), createLore(claimableWorlds), 11);
+    claimLimitsGUI.addItem(Material.GRASS_BLOCK, colorize(LandClaim.plugin.getLocalizedString("GUI.Text_Regions")), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Text_RegionLore")
+            .replace("{AllowedRegions}", Integer.toString(numAllowedRegions))
+            .replace("{OwnedRegions}", Integer.toString(numOwnedRegions))
+            .replace("{RemainingRegions}", Integer.toString((numAllowedRegions - numOwnedRegions)))), 13);
+    claimLimitsGUI.addItem(Material.DIRT, colorize(LandClaim.plugin.getLocalizedString("GUI.Text_Plots")), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Text_PlotsLore")
+            .replace("{AllowedPlots}", Integer.toString(numAllowedPlots))
+            .replace("{OwnedPlots}", Integer.toString(numOwnedPlots))
+            .replace("{RemainingPlots}", Integer.toString((numAllowedPlots - numOwnedPlots)))), 15);
     claimLimitsGUI.open(player);
   }
 
@@ -102,9 +108,9 @@ public class GUIManager {
     allClaims.addAll(memberRegions);
     allClaims.addAll(memberPlots);
     int totalSlots = Math.min(((int) Math.ceil(allClaims.size() / 7d) + 2) * 9, 54);
-    NGUI allClaimsGUI = new NGUI(totalSlots, "LandClaim Claims - Page " + (numRegionsToSkip / 28 + 1));
+    NGUI allClaimsGUI = new NGUI(totalSlots, LandClaim.plugin.getLocalizedString("GUI.Title_Claims")+" - "+LandClaim.plugin.getLocalizedString("GUI.Text_Page") + " " + (numRegionsToSkip / 28 + 1));
     if (numRegionsToSkip > 0) {
-      allClaimsGUI.addItem(Material.PAPER, ChatColor.GOLD + "Previous Page", null, 48);
+      allClaimsGUI.addItem(Material.PAPER, LandClaim.plugin.getLocalizedString("GUI.Action_PreviousPage"), null, 48);
     }
     int loopCounter = 0;
     for (String rg : allClaims) {
@@ -114,7 +120,7 @@ public class GUIManager {
         continue;
       }
       if (++nextSlot > 43) {
-        allClaimsGUI.addItem(Material.PAPER, ChatColor.GOLD + "Next Page", null, 50);
+        allClaimsGUI.addItem(Material.PAPER, LandClaim.plugin.getLocalizedString("GUI.Action_NextPage"), null, 50);
         break;
       }
       if ((nextSlot + 1) % 9 == 0) {
@@ -134,8 +140,8 @@ public class GUIManager {
         }
       }
     }
-    allClaimsGUI.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, totalSlots - 5);
-    allClaimsGUI.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, totalSlots - 3);
+    allClaimsGUI.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, totalSlots - 5);
+    allClaimsGUI.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, totalSlots - 3);
     allClaimsGUI.open(player);
   }
 
@@ -166,11 +172,11 @@ public class GUIManager {
 
   public void openClaimInspector(Player player, String regionName, String worldName) {
     //ProtectedRegion region = LandClaim.wg.getPlatform().getRegionContainer().get(BukkitAdapter.adapt(player.getWorld())).getRegion(regionName);
-    NGUI inspectorGUI = new NGUI(18, "LandClaim Inspector");
+    NGUI inspectorGUI = new NGUI(18, LandClaim.plugin.getLocalizedString("GUI.Title_ClaimInspector"));
 
-    inspectorGUI.addItem(Material.PLAYER_HEAD, colorize("&3Players"), null);
+    inspectorGUI.addItem(Material.PLAYER_HEAD, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Players")), null);
     if (player.hasPermission("landclaim.teleport") || player.hasPermission("landclaim.inspect.others")) {
-      inspectorGUI.addItem(Material.ENDER_PEARL, colorize("&3Teleport"), null);
+      inspectorGUI.addItem(Material.ENDER_PEARL, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Teleport")), null);
     }
     String ownerOrMember = Claim.playerIsOwnerOrMember(player, regionName, worldName);
     if (ownerOrMember == null) {
@@ -178,57 +184,57 @@ public class GUIManager {
     }
     boolean isOwner = ownerOrMember.equalsIgnoreCase("Owner");
     if ((isOwner && player.hasPermission("landclaim.flageditor")) || player.hasPermission("landclaim.inspect.others")) {
-      inspectorGUI.addItem(Material.CYAN_BANNER, colorize("&3Flag Editor"), null);
+      inspectorGUI.addItem(Material.CYAN_BANNER, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_FlagEditor")), null);
     }
     if ((isOwner && player.hasPermission("landclaim.remove.own")) || player.hasPermission("landclaim.edit.others")) {
-      inspectorGUI.addItem(Material.STRUCTURE_VOID, colorize("&3Remove &5" + regionName), null);
+      inspectorGUI.addItem(Material.STRUCTURE_VOID, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Remove") + " " + regionName), null);
     }
 
     inspectorGUI.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString("&fWorld: &9" + worldName), 11);
-    inspectorGUI.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 13);
-    inspectorGUI.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 15);
+    inspectorGUI.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 13);
+    inspectorGUI.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 15);
     inspectorGUI.open(player);
   }
 
   public void openOwnersMembersEditor(Player player, String regionName, String worldName) {
     int firstSlot = 0;
-    NGUI inspectorGUI = new NGUI(18, "Owners/Members Editor");
+    NGUI inspectorGUI = new NGUI(18, LandClaim.plugin.getLocalizedString("GUI.Title_MembersEditor"));
 
-    inspectorGUI.addItem(Material.PLAYER_HEAD, colorize("&3View/Remove Players"), null, firstSlot++);
+    inspectorGUI.addItem(Material.PLAYER_HEAD, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_ManagePlayers")), null, firstSlot++);
     String ownerOrMember = Claim.playerIsOwnerOrMember(player, regionName, worldName);
     if ((ownerOrMember != null && ownerOrMember.equalsIgnoreCase("Owner") && player.hasPermission("landclaim.addplayer")) || player.hasPermission("landclaim.edit.others")) {
-      inspectorGUI.addItem(Material.TOTEM_OF_UNDYING, colorize("&3Add Player to Claim"), null, firstSlot++);
+      inspectorGUI.addItem(Material.TOTEM_OF_UNDYING, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_AddToClaim")), null, firstSlot++);
     }
 
     inspectorGUI.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString("&fWorld: &9" + worldName), 11);
-    inspectorGUI.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 13);
-    inspectorGUI.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 15);
+    inspectorGUI.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 13);
+    inspectorGUI.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 15);
     inspectorGUI.open(player);
   }
 
   public void promptForRemoval(String playerName, String regionName, String worldName) {
-    NGUI removalPrompt = new NGUI(36, "LandClaim Claim Removal");
-    removalPrompt.addItem(Material.STRUCTURE_VOID, colorize("&3Remove &5" + regionName + "&3?"), parseLoreString("&cWarning:|&fThis will permanently|&fremove your claim"), 13);
+    NGUI removalPrompt = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_ClaimRemoval"));
+    removalPrompt.addItem(Material.STRUCTURE_VOID, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Remove")), parseLoreString("&cWarning:|&fThis will permanently|&fremove your claim"), 13);
 
     removalPrompt.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString("&fWorld: &9" + worldName), 29);
-    removalPrompt.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
-    removalPrompt.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
+    removalPrompt.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+    removalPrompt.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
     removalPrompt.open(Bukkit.getPlayer(playerName));
   }
 
-  public void openAddPlayer(String playerName, String regionName, String worldName) {
-    NGUI addPlayer = new NGUI(36, "Add Player to Claim");
-    addPlayer.addItem(Material.WITHER_SKELETON_SKULL, colorize("&3Add Owner to &5" + regionName), parseLoreString("&fThis will give the|&fplayer full permissions|&fon this claim"), 12);
-    addPlayer.addItem(Material.SKELETON_SKULL, colorize("&3Add Member to &5" + regionName), parseLoreString("&fThis will give the|&fplayer partial permissions|&fon this claim"), 14);
+  public void openAddPlayer(Player player, String regionName, String worldName) {
+    NGUI addPlayer = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_AddMember"));
+    addPlayer.addItem(Material.WITHER_SKELETON_SKULL, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_AddOwner")), parseLoreString("&fThis will give the|&fplayer full permissions|&fon this claim"), 12);
+    addPlayer.addItem(Material.SKELETON_SKULL, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_AddMember")), parseLoreString("&fThis will give the|&fplayer partial permissions|&fon this claim"), 14);
 
     addPlayer.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString("&fWorld: &9" + worldName), 29);
-    addPlayer.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
-    addPlayer.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
-    addPlayer.open(Bukkit.getPlayer(playerName));
+    addPlayer.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+    addPlayer.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
+    addPlayer.open(player);
   }
 
   public void openPlayersEditor(Player player, String regionName, String worldName) {
-    NGUI playersEditor = new NGUI(54, "View/Remove Players");
+    NGUI playersEditor = new NGUI(54, LandClaim.plugin.getLocalizedString("GUI.Action_ManagePlayers"));
     Set<UUID> owners = LandClaim.wg.getPlatform().getRegionContainer().get(BukkitAdapter.adapt(Bukkit.getWorld(worldName))).getRegion(regionName).getOwners().getPlayerDomain().getUniqueIds();
     for (UUID uuid : owners) {
       playersEditor.addItem(Material.WITHER_SKELETON_SKULL, colorize("&b" + Bukkit.getOfflinePlayer(uuid).getName()), parseLoreString("&7UUID:" + uuid));
@@ -239,49 +245,49 @@ public class GUIManager {
     }
 
     playersEditor.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString("&fWorld: &9" + worldName), 47);
-    playersEditor.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 49);
-    playersEditor.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 51);
+    playersEditor.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 49);
+    playersEditor.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 51);
     playersEditor.open(player);
   }
 
   public void openMemberRemover(Player player, String uuid, String regionName, String worldName) {
-    NGUI removeMember = new NGUI(36, "Remove Member");
-    removeMember.addItem(Material.BARRIER, colorize("&3Are you sure?"), parseLoreString("&fRemove Member: &b" + Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() + "|" + "&7UUID: " + uuid), 13);
+    NGUI removeMember = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_RemoveMember"));
+    removeMember.addItem(Material.BARRIER, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Confirm")), parseLoreString("&fRemove Member: &b" + Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() + "|" + "&7UUID: " + uuid), 13);
 
     removeMember.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString("&fWorld: &9" + worldName), 29);
-    removeMember.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
-    removeMember.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
+    removeMember.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+    removeMember.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
     removeMember.open(player);
   }
 
   public void openOwnerRemover(Player player, String uuid, String regionName, String worldName) {
-    NGUI removeOwner = new NGUI(36, "Remove Owner");
-    removeOwner.addItem(Material.BARRIER, ChatColor.RED + "Are you sure?", parseLoreString("&fRemove Owner: &b" + Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() + "|" + "&7UUID: " + uuid), 13);
+    NGUI removeOwner = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_RemoveOwner"));
+    removeOwner.addItem(Material.BARRIER, LandClaim.plugin.getLocalizedString("GUI.Action_Confirm"), parseLoreString("&fRemove Owner: &b" + Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() + "|" + "&7UUID: " + uuid), 13);
 
     removeOwner.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString("&fWorld: &9" + worldName), 29);
-    removeOwner.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
-    removeOwner.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
+    removeOwner.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+    removeOwner.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
     removeOwner.open(player);
   }
 
   public void openTeleportGUI(Player player, String regionName, String worldName) {
-    NGUI teleportGUI = new NGUI(36, "LandClaim Teleport");
+    NGUI teleportGUI = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_ClaimTeleport"));
     String ownerOrMember = Claim.playerIsOwnerOrMember(player, regionName, worldName);
     if ((ownerOrMember != null && ownerOrMember.equalsIgnoreCase("Owner")) || player.hasPermission("landclaim.edit.others")) {
-      teleportGUI.addItem(Material.FURNACE, colorize("&3Remove Teleport Point"), parseLoreString("&fRemove the teleport|&fpoint for &5" + regionName + "&f."), 11);
+      teleportGUI.addItem(Material.FURNACE, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_RemoveTpPoint")), parseLoreString("&fRemove the teleport|&fpoint for &5" + regionName + "&f."), 11);
     }
-    teleportGUI.addItem(Material.ENDER_PEARL, colorize("&3Teleport to &5" + regionName), null, 13);
+    teleportGUI.addItem(Material.ENDER_PEARL, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_TeleportTo") + " " + regionName), null, 13);
     if ((ownerOrMember != null && ownerOrMember.equalsIgnoreCase("Owner")) || player.hasPermission("landclaim.edit.others")) {
-      teleportGUI.addItem(Material.CRAFTING_TABLE, colorize("&3Set Teleport Point"), parseLoreString("&fSet the teleport|&fpoint for &5" + regionName + "&f to|&fyour current location."), 15);
+      teleportGUI.addItem(Material.CRAFTING_TABLE, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_SetTpPoint")), parseLoreString("&fSet the teleport|&fpoint for &5" + regionName + "&f to|&fyour current location."), 15);
     }
     teleportGUI.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString("&fWorld: &9" + worldName), 29);
-    teleportGUI.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
-    teleportGUI.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
+    teleportGUI.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+    teleportGUI.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
     teleportGUI.open(player);
   }
 
   public void openFlagsGUI(Player player, String regionName, String worldName) {
-    NGUI flagEditor = new NGUI(45, "LandClaim Flags");
+    NGUI flagEditor = new NGUI(45, LandClaim.plugin.getLocalizedString("GUI.Title_ClaimFlags"));
     ProtectedRegion region = Claim.getRegion(player, regionName, worldName);
 
     editableClaimFlags.forEach((flagName, flag) -> {
@@ -296,13 +302,13 @@ public class GUIManager {
     });
 
     flagEditor.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString("&fWorld: &9" + worldName), 38);
-    flagEditor.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 40);
-    flagEditor.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 42);
+    flagEditor.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 40);
+    flagEditor.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 42);
     flagEditor.open(player);
   }
 
   public void openStateFlagEditor(Player player, String regionName, String flagName, String worldName) {
-    NGUI flagEditor = new NGUI(18, "LandClaim State Flag Editor");
+    NGUI flagEditor = new NGUI(18, LandClaim.plugin.getLocalizedString("GUI.Title_StateFlagEditor"));
 
     flagEditor.addItem(Material.DARK_OAK_SIGN, flagName, null, 0);
 
@@ -310,65 +316,65 @@ public class GUIManager {
 
     if (region.getFlags().containsKey(editableClaimFlags.get(flagName))) {
       if (region.getFlag(editableClaimFlags.get(flagName)).toString().equalsIgnoreCase("ALLOW")) {
-        flagEditor.addItem(Material.EMERALD_BLOCK, ChatColor.GREEN + "Allow", null);
-        flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.RED + "Deny", null);
+        flagEditor.addItem(Material.EMERALD_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_Allow"), null);
+        flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_Deny"), null);
       } else {
-        flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.GREEN + "Allow", null);
-        flagEditor.addItem(Material.EMERALD_BLOCK, ChatColor.RED + "Deny", null);
+        flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_Allow"), null);
+        flagEditor.addItem(Material.EMERALD_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_Deny"), null);
       }
 
-      flagEditor.addItem(Material.BARRIER, ChatColor.RED + "Delete Flag", null);
+      flagEditor.addItem(Material.BARRIER, LandClaim.plugin.getLocalizedString("GUI.Action_DeleteFlag"), null);
       RegionGroup regionGroup = region.getFlag(editableClaimFlags.get(flagName).getRegionGroupFlag());
 
       if (regionGroup == null || regionGroup.equals(RegionGroup.ALL)) {
-        flagEditor.addItem(Material.EMERALD_BLOCK, ChatColor.AQUA + "Set for everyone", null);
+        flagEditor.addItem(Material.EMERALD_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetEveryone"), null);
       } else {
-        flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.AQUA + "Set for everyone", null);
+        flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetEveryone"), null);
       }
 
       if (regionGroup != null && regionGroup.equals(RegionGroup.MEMBERS)) {
-        flagEditor.addItem(Material.EMERALD_BLOCK, ChatColor.AQUA + "Set for members", null);
+        flagEditor.addItem(Material.EMERALD_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetMembers"), null);
       } else {
-        flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.AQUA + "Set for members", null);
+        flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetMembers"), null);
       }
 
       if (regionGroup != null && regionGroup.equals(RegionGroup.OWNERS)) {
-        flagEditor.addItem(Material.EMERALD_BLOCK, ChatColor.AQUA + "Set for owners", null);
+        flagEditor.addItem(Material.EMERALD_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetOwners"), null);
       } else {
-        flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.AQUA + "Set for owners", null);
+        flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetOwners"), null);
       }
 
       if (regionGroup != null && regionGroup.equals(RegionGroup.NON_MEMBERS)) {
-        flagEditor.addItem(Material.EMERALD_BLOCK, ChatColor.AQUA + "Set for non-members", null);
+        flagEditor.addItem(Material.EMERALD_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetNotMembers"), null);
       } else {
-        flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.AQUA + "Set for non-members", null);
+        flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetNotMembers"), null);
       }
 
       if (regionGroup != null && regionGroup.equals(RegionGroup.NON_OWNERS)) {
-        flagEditor.addItem(Material.EMERALD_BLOCK, ChatColor.AQUA + "Set for non-owners", null);
+        flagEditor.addItem(Material.EMERALD_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetNotOwners"), null);
       } else {
-        flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.AQUA + "Set for non-owners", null);
+        flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetNotOwners"), null);
       }
     } else {
-      flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.GREEN + "Allow", null);
-      flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.RED + "Deny", null);
-      flagEditor.addItem(Material.BARRIER, ChatColor.RED + "Delete Flag", null);
-      flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.AQUA + "Set for everyone", null);
-      flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.AQUA + "Set for members", null);
-      flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.AQUA + "Set for owners", null);
-      flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.AQUA + "Set for non-members", null);
-      flagEditor.addItem(Material.REDSTONE_BLOCK, ChatColor.AQUA + "Set for non-owners", null);
+      flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_Allow"), null);
+      flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_Deny"), null);
+      flagEditor.addItem(Material.BARRIER, LandClaim.plugin.getLocalizedString("GUI.Action_DeleteFlag"), null);
+      flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetEveryone"), null);
+      flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetMembers"), null);
+      flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetOwners"), null);
+      flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetNotMembers"), null);
+      flagEditor.addItem(Material.REDSTONE_BLOCK, LandClaim.plugin.getLocalizedString("GUI.Action_SetNotOwners"), null);
     }
 
 
     flagEditor.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString("&fWorld: &9" + worldName), 11);
-    flagEditor.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 13);
-    flagEditor.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 15);
+    flagEditor.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 13);
+    flagEditor.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 15);
     flagEditor.open(player);
   }
 
   public void openStringFlagEditor(Player player, String regionName, String flagName, String worldName) {
-    NGUI flagEditor = new NGUI(18, "LandClaim String Flag Editor");
+    NGUI flagEditor = new NGUI(18, LandClaim.plugin.getLocalizedString("GUI.Title_StringFlagEditor"));
     List<String> currentFlagText = new ArrayList<>();
     ProtectedRegion region = Claim.getRegion(player, regionName, worldName);
     if (region.getFlags().containsKey(editableClaimFlags.get(flagName))) {
@@ -390,30 +396,30 @@ public class GUIManager {
       }
     }
     flagEditor.addItem(Material.DARK_OAK_SIGN, flagName, currentFlagText, 0);
-    flagEditor.addItem(Material.WRITABLE_BOOK, colorize("&3Enter New Value"), null, 4);
-    flagEditor.addItem(Material.BARRIER, ChatColor.RED + "Delete Flag", null, 8);
+    flagEditor.addItem(Material.WRITABLE_BOOK, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_NewValue")), null, 4);
+    flagEditor.addItem(Material.BARRIER, LandClaim.plugin.getLocalizedString("GUI.Action_DeleteFlag"), null, 8);
 
 
     flagEditor.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString("&fWorld: &9" + worldName), 11);
-    flagEditor.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 13);
-    flagEditor.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 15);
+    flagEditor.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 13);
+    flagEditor.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 15);
     flagEditor.open(player);
   }
 
   public void openTopRegionsGUI(Player player) {
-    NGUI topRegionsGUI = new NGUI(9, "LandClaim Top Regions");
+    NGUI topRegionsGUI = new NGUI(9, LandClaim.plugin.getLocalizedString("GUI.Title_TopRegions"));
 
-    topRegionsGUI.addItem(Material.EMERALD, colorize("&5Top Regions &f- &6Year"), null);
-    topRegionsGUI.addItem(Material.EMERALD, colorize("&5Top Regions &f- &6Month"), null);
-    topRegionsGUI.addItem(Material.EMERALD, colorize("&5Top Regions &f- &6Day"), null);
+    topRegionsGUI.addItem(Material.EMERALD, colorize(LandClaim.plugin.getLocalizedString("GUI.Title_YearTopRegions")), null);
+    topRegionsGUI.addItem(Material.EMERALD, colorize(LandClaim.plugin.getLocalizedString("GUI.Title_MonthTopRegions")), null);
+    topRegionsGUI.addItem(Material.EMERALD, colorize(LandClaim.plugin.getLocalizedString("GUI.Title_DayTopRegions")), null);
 
-    topRegionsGUI.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 7);
-    topRegionsGUI.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 8);
+    topRegionsGUI.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 7);
+    topRegionsGUI.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 8);
     topRegionsGUI.open(player);
   }
 
   public void openTopYearRegions(Player player) {
-    NGUI topYearRegions = new NGUI(36, "LandClaim Top Regions - Year");
+    NGUI topYearRegions = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_YearTopRegions"));
     doGlassPattern1(topYearRegions);
     List<VoteRegion> voteRegions = VoteRegion.getVoteRegionList();
     voteRegions.sort(Comparator.comparingInt(VoteRegion::getVotesThisYear).reversed());
@@ -425,13 +431,13 @@ public class GUIManager {
       }
     }
 
-    topYearRegions.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
-    topYearRegions.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
+    topYearRegions.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+    topYearRegions.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
     topYearRegions.open(player);
   }
 
   public void openTopMonthRegions(Player player) {
-    NGUI topMonthRegions = new NGUI(36, "LandClaim Top Regions - Month");
+    NGUI topMonthRegions = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_MonthTopRegions"));
     doGlassPattern1(topMonthRegions);
     List<VoteRegion> voteRegions = VoteRegion.getVoteRegionList();
     voteRegions.sort(Comparator.comparingInt(VoteRegion::getVotesThisMonth).reversed());
@@ -443,13 +449,13 @@ public class GUIManager {
       }
     }
 
-    topMonthRegions.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
-    topMonthRegions.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
+    topMonthRegions.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+    topMonthRegions.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
     topMonthRegions.open(player);
   }
 
   public void openTopDayRegions(Player player) {
-    NGUI topDayRegions = new NGUI(36, "LandClaim Top Regions - Day");
+    NGUI topDayRegions = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_DayTopRegions"));
     doGlassPattern1(topDayRegions);
     List<VoteRegion> voteRegions = VoteRegion.getVoteRegionList();
     voteRegions.sort(Comparator.comparingInt(VoteRegion::getVotesToday).reversed());
@@ -461,8 +467,8 @@ public class GUIManager {
       }
     }
 
-    topDayRegions.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
-    topDayRegions.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
+    topDayRegions.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+    topDayRegions.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
     topDayRegions.open(player);
   }
 

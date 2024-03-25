@@ -53,15 +53,15 @@ public class MainCommand implements CommandExecutor {
               return false;
             }
             if (!Claimer.permToOwnAnotherRegion(player) && !player.isOp()) {
-              player.sendMessage(ChatColor.RED + "You don't have permission to claim or have claimed too many regions.");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_CannotClaim"));
               return true;
             }
             if (!Claimer.permissionToClaimInWorld(player) && !player.isOp()) {
-              player.sendMessage(ChatColor.RED + "You don't have permission to claim in this world.");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_CannotClaimInWorld"));
               return true;
             }
             if (!ProtectedRegion.isValidId(args[1])) {
-              player.sendMessage(ChatColor.GOLD + "That is not a valid region name.");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_InvalidRegionName"));
               return true;
             }
             Claim claim = new Claim(player, args[1]);
@@ -69,24 +69,24 @@ public class MainCommand implements CommandExecutor {
               return true;
             }
             if (claim.overlapsUnownedRegion()) {
-              player.sendMessage(ChatColor.GOLD + "Your selection overlaps a region belonging to someone else!");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_OverlappingRegions"));
               return true;
             }
             if (!meetsClaimLimits(claim)) {
               return true;
             }
             if (LandClaim.econ.getBalance(player) < claim.getClaimCost()) {
-              player.sendMessage(ChatColor.GOLD + "You don't have enough money to claim this region for $" + claim.getClaimCost());
+              player.sendMessage(Claim.parsePlaceholders(LandClaim.plugin.getLocalizedString("Messages.Error_NotEnoughMoney"), claim));
               return true;
             }
             LandClaim.claimMap.put(player.getUniqueId().toString(), claim);
-            NGUI claimGUI = new NGUI(36, "LandClaim Claim Region");
-            claimGUI.addItem(Material.GRASS_BLOCK, ChatColor.translateAlternateColorCodes('&', "&3Are You Sure You Want To Claim This Region?"), guiManager.parseLoreString(Claim.parsePlaceholders("&5Region Name: &f{RegionName}|&5Region Cost: &f{RegionCost}|&5Region Size: &f{RegionLength} x {RegionHeight} x {RegionWidth}|&aClick to confirm purchase.", claim)), 13);
-            claimGUI.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
-            claimGUI.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
+            NGUI claimGUI = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_ClaimRegion"));
+            claimGUI.addItem(Material.GRASS_BLOCK, LandClaim.plugin.getLocalizedString("GUI.PopupTitle_ClaimRegion"), guiManager.parseLoreString(Claim.parsePlaceholders(LandClaim.plugin.getLocalizedString("GUI.Lore_RegionDescription"), claim)), 13);
+            claimGUI.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+            claimGUI.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
             claimGUI.open(player);
           } else {
-            sender.sendMessage("You must be a player to use that command!");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NotAPlayer"));
           }
           break;
         case "claimplot":
@@ -95,15 +95,15 @@ public class MainCommand implements CommandExecutor {
               return false;
             }
             if (!Claimer.permToOwnAnotherPlot(player) && !player.isOp()) {
-              player.sendMessage(ChatColor.RED + "You don't have permission to claim or have claimed too many plots.");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_CannotClaim"));
               return true;
             }
             if (!Claimer.permissionToClaimInWorld(player) && !player.isOp()) {
-              player.sendMessage(ChatColor.RED + "You don't have permission to claim in this world.");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_CannotClaimInWorld"));
               return true;
             }
             if (!ProtectedRegion.isValidId(args[1])) {
-              player.sendMessage(ChatColor.GOLD + "That is not a valid plot name.");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_InvalidPlotName"));
               return true;
             }
             Claim claim = new Claim(player, args[1], true);
@@ -111,36 +111,36 @@ public class MainCommand implements CommandExecutor {
               return true;
             }
             if (!claim.insideOwnedRegion()) {
-              player.sendMessage(ChatColor.GOLD + "You may only claim a plot inside a region that you own.");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_CannotClaimPlot"));
               return true;
             }
             if (claim.overlapsUnownedRegion()) {
-              player.sendMessage(ChatColor.GOLD + "Your selection overlaps a region belonging to someone else.");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_OverlappingRegions"));
               return true;
             }
             if (LandClaim.econ.getBalance(player) < claim.getClaimCost()) {
-              player.sendMessage(ChatColor.GOLD + "You don't have enough money to claim this region for $" + claim.getClaimCost());
+              player.sendMessage(Claim.parsePlaceholders(LandClaim.plugin.getLocalizedString("Messages.Error_NotEnoughMoney"), claim));
               return true;
             }
             LandClaim.claimMap.put(player.getUniqueId().toString(), claim);
-            NGUI claimGUI = new NGUI(36, "LandClaim Claim Plot");
-            claimGUI.addItem(Material.DIRT, ChatColor.translateAlternateColorCodes('&', "&3Are You Sure You Want To Claim This Plot?"), guiManager.parseLoreString(Claim.parsePlaceholders("&5Region Name: &f{RegionName}|&5Region Cost: &f{RegionCost}|&5Region Size: &f{RegionLength} x {RegionHeight} x {RegionWidth}|&aClick to confirm purchase.", claim)), 13);
-            claimGUI.addItem(Material.ARROW, ChatColor.GOLD + "Back", null, 31);
-            claimGUI.addItem(Material.BIRCH_DOOR, ChatColor.GOLD + "Close", null, 33);
+            NGUI claimGUI = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_ClaimPlot"));
+            claimGUI.addItem(Material.DIRT, LandClaim.plugin.getLocalizedString("GUI.PopupTitle_ClaimPlot"), guiManager.parseLoreString(Claim.parsePlaceholders(LandClaim.plugin.getLocalizedString("GUI.Lore_RegionDescription"), claim)), 13);
+            claimGUI.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+            claimGUI.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
             claimGUI.open(player);
           } else {
-            sender.sendMessage("You must be a player to use that command!");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NotAPlayer"));
           }
           break;
         case "reload":
           if ((sender instanceof Player) && !player.hasPermission("landclaim.reload") && !player.isOp()) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to do that!");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_MissingPermission"));
             return true;
           }
           LandClaim.plugin.reloadConfig();
           LandClaim.plugin.getCommand("lc").setTabCompleter(new CommandCompleter());
           LandClaim.plugin.getCommand("lc").setExecutor(new MainCommand());
-          sender.sendMessage(ChatColor.GOLD + "LandClaim config reloaded!");
+          sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Info_ConfigReloaded"));
           break;
         case "cancel":
           if (Prompt.hasActivePrompt(player)) {
@@ -149,10 +149,10 @@ public class MainCommand implements CommandExecutor {
           break;
         case "nearby":
           if (!(sender instanceof Player)) {
-            sender.sendMessage("You must be a player to use that command.");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NotAPlayer"));
           }
           if ((sender instanceof Player) && !player.hasPermission("landclaim.nearby")) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to do that!");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_MissingPermission"));
             return true;
           }
           String playerName = player.getName();
@@ -163,12 +163,12 @@ public class MainCommand implements CommandExecutor {
             Visualizer.seeNearbyBukkitTask.remove(playerName);
             Visualizer.seeNearbyAsyncService.remove(playerName);
             Visualizer.timer.remove(playerName);
-            nPlayer.sendMessage(ChatColor.GOLD + "Disabled nearby region viewing.");
+            nPlayer.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Info_NearbyDisabled"));
             return true;
           }
           AtomicInteger timer = new AtomicInteger(0);
           Visualizer.timer.put(playerName, timer);
-          nPlayer.sendMessage(ChatColor.GOLD + "Enabled nearby region viewing.");
+          nPlayer.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Info_NearbyEnabled"));
           try {
             Visualizer.seeNearbyAsyncService.put(playerName, Executors.newSingleThreadScheduledExecutor());
             final Runnable task = () -> {
@@ -206,7 +206,7 @@ public class MainCommand implements CommandExecutor {
               if (ticks / 20 == maxSeconds) {
                 this.cancel();
                 Visualizer.seeNearbyBukkitTask.remove(playerName);
-                nPlayer.sendMessage(ChatColor.GOLD + "Disabled nearby region viewing.");
+                nPlayer.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Info_NearbyDisabled"));
               }
             }
           };
@@ -216,34 +216,34 @@ public class MainCommand implements CommandExecutor {
           break;
         case "teleport":
           if (!(sender instanceof Player)) {
-            sender.sendMessage("You must be a player to do that.");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NotAPlayer"));
             return true;
           }
           if (!player.hasPermission("landclaim.teleport")) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_MissingPermission"));
             return true;
           }
           if (args.length < 2) {
-            player.sendMessage(ChatColor.GOLD + "Teleport to a claim with /lc teleport [region],[world]");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Help.Teleport"));
             return true;
           }
           Claim.teleportToClaim(player, args[1].split(",")[0], args[1].split(",")[1]);
           return true;
         case "delete":
           if (!(sender instanceof Player)) {
-            sender.sendMessage("You must be a player to do that.");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NotAPlayer"));
             return true;
           }
           if (!player.hasPermission("landclaim.delete.own")) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_MissingPermission"));
             return true;
           }
           if (args.length < 2) {
-            player.sendMessage(ChatColor.GOLD + "You must specify the claim you want to remove.");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_UnspecifiedClaim"));
             return true;
           }
           if (args[1].split(",").length < 2) {
-            player.sendMessage(ChatColor.GOLD + "Please format region as " + ChatColor.AQUA + "[region],[worldName]" + ChatColor.GOLD + ". Type /lc world to get the world name.");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_RegionFormat"));
             return true;
           }
           Set<UUID> regionOwners = Claim.getRegionOwners(args[1].split(",")[0], args[1].split(",")[1]);
@@ -252,55 +252,55 @@ public class MainCommand implements CommandExecutor {
               guiManager.promptForRemoval(player.getName(), args[1].split(",")[0], args[1].split(",")[1]);
               return true;
             }
-            player.sendMessage(ChatColor.RED + "You don't own that region.");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NotAnOwner"));
           } else {
-            player.sendMessage(ChatColor.GOLD + "Invalid Region");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_RegionNotFound"));
           }
           break;
         case "list":
           if (!player.hasPermission("landclaim.list")) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to do that!");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_MissingPermission"));
             return true;
           }
           guiManager.openAllClaimsGUI(player);
           break;
         case "recountvotes":
           if (!player.hasPermission("landclaim.recountvotes") && !player.isOp()) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to do that!");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_MissingPermission"));
             return true;
           }
           VoteRegion.tallyAllVotes();
-          player.sendMessage(GUIManager.colorize("&6Recounted votes."));
+          player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_RecountedVotes"));
           break;
         case "world":
           if (!player.hasPermission("landclaim.getworld") && !player.isOp()) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_MissingPermission"));
             return true;
           } else {
-            sender.sendMessage(ChatColor.GOLD + "You are in world: " + ChatColor.AQUA + player.getWorld().getName());
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.PlayerInWorld").replace("{WorldName}", player.getWorld().getName()));
           }
           break;
         case "inspect":
           if (!(sender instanceof Player)) {
-            sender.sendMessage("You must be a player to do that.");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NotAPlayer"));
             return true;
           }
           if (!player.hasPermission("landclaim.inspect.own") && !player.isOp()) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_MissingPermission"));
             return true;
           }
           if (args.length < 2) {
-            player.sendMessage(ChatColor.GOLD + "You must specify the claim you want to inspect.");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_UnspecifiedClaim"));
             return true;
           }
           if (args[1].split(",").length < 2) {
-            player.sendMessage(ChatColor.GOLD + "Please format region as " + ChatColor.AQUA + "[region],[worldName]" + ChatColor.GOLD + ". Type /lc world to get the world name.");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_RegionFormat"));
             return true;
           }
           String regionName = args[1].split(",")[0];
           String worldName = args[1].split(",")[1];
           if (!Claim.exists(regionName, worldName)) {
-            player.sendMessage(ChatColor.GOLD + "That claim does not exist");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_RegionNotFound"));
             return true;
           }
           String ownerOrMember = Claim.playerIsOwnerOrMember(player, regionName, worldName);
@@ -308,43 +308,43 @@ public class MainCommand implements CommandExecutor {
             guiManager.openClaimInspector(player, args[1].split(",")[0], args[1].split(",")[1]);
             return true;
           }
-          player.sendMessage(ChatColor.GOLD + "You cannot inspect that region.");
+          player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_CannotInspect"));
           break;
         case "vote":
           if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.GOLD + "You must be a player to do that.");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NotAPlayer"));
             return true;
           }
           if (!player.hasPermission("landclaim.vote") && !player.isOp()) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+            sender.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_MissingPermission"));
             return true;
           }
           if (args.length < 2) {
             List<ProtectedRegion> regionsList = Claims.getRegionsAtLocation(player.getLocation());
             if (regionsList.isEmpty()) {
-              player.sendMessage(ChatColor.GOLD + "You are not standing in any regions. /lc vote [REGION] to vote for a region.");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_CannotVoteOutsideRegions"));
               return true;
             }
             if (regionsList.size() == 1) {
               VoteFile voteFile = VoteFile.get();
               Vote lastVote = voteFile.getLatestVote(regionsList.get(0).getId(), player.getWorld().getName(), player.getUniqueId().toString());
               if (lastVote != null && !lastVote.dayHasPassed()) {
-                player.sendMessage(ChatColor.GOLD + "You must wait " + (1 - lastVote.daysSinceLastVote()) + " days before voting for that region again");
+                player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_VoteTimeout").replace("{VoteTimeout}", Long.toString(1 - lastVote.daysSinceLastVote())));
                 return true;
               }
               VoteFile.get().addVote(regionsList.get(0).getId(), player.getWorld().getName(), player.getUniqueId().toString()).save();
               VoteRegion.addVote(regionsList.get(0).getId() + "," + player.getWorld().getName());
-              player.sendMessage(ChatColor.GOLD + "Vote registered successfully!");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_VoteRegistered"));
               return true;
             }
-            String message = ChatColor.GOLD + "You are standing in regions: ";
+            String message = LandClaim.plugin.getLocalizedString("Messages.Info_PLayerInRegion");
             StringBuilder extraMessage = new StringBuilder();
             for (ProtectedRegion region : regionsList) {
               extraMessage.append(region.getId()).append(", ");
             }
             extraMessage.delete(extraMessage.length() - 2, extraMessage.length());
             player.sendMessage(message + extraMessage + ".");
-            player.sendMessage(ChatColor.GOLD + "/lc vote [REGION] to pick which region");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Info_VoteRegion"));
             return true;
           }
           ProtectedRegion region = Claims.getRegionByName(args[1], BukkitAdapter.adapt(player.getWorld()));
@@ -352,15 +352,15 @@ public class MainCommand implements CommandExecutor {
             VoteFile voteFile = VoteFile.get();
             Vote lastVote = voteFile.getLatestVote(region.getId(), player.getWorld().getName(), player.getUniqueId().toString());
             if (lastVote != null && !lastVote.dayHasPassed()) {
-              player.sendMessage(ChatColor.GOLD + "You must wait " + (1 - lastVote.daysSinceLastVote()) + " days before vote for that region again");
+              player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_VoteTimeout").replace("{VoteTimeout}", Long.toString(1 - lastVote.daysSinceLastVote())));
               return true;
             }
             VoteFile.get().addVote(region.getId(), player.getWorld().getName(), player.getUniqueId().toString()).save();
             VoteRegion.addVote(region.getId() + "," + player.getWorld().getName());
-            player.sendMessage(ChatColor.GOLD + "Vote registered successfully!");
+            player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_VoteRegistered"));
             return true;
           }
-          player.sendMessage(ChatColor.GOLD + "That is not a valid region.");
+          player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_RegionNotFound"));
           break;
         default:
           return false;
@@ -377,15 +377,15 @@ public class MainCommand implements CommandExecutor {
       int length = claim.getClaimLength();
       int width = claim.getClaimWidth();
       if (area < LandClaim.plugin.getConfig().getInt("Claims.Regions.MinSize")) {
-        player.sendMessage(ChatColor.GOLD + "Your selection is too small!");
+        player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_SelectionTooSmall"));
         return false;
       }
       if (area > LandClaim.plugin.getConfig().getInt("Claims.Regions.MaxSize")) {
-        player.sendMessage(ChatColor.GOLD + "Your selection is too large!");
+        player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_SelectionTooLarge"));
         return false;
       }
       if (((double) length / width) > LandClaim.plugin.getConfig().getDouble("Claims.Regions.MaxLWRatio") || ((double) width / length) > LandClaim.plugin.getConfig().getDouble("Claims.Regions.MaxLWRatio")) {
-        player.sendMessage(ChatColor.GOLD + "Your selection doesn't meet proportion requirements!");
+        player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_UnmetProportions"));
         return false;
       }
     }

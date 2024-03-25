@@ -33,6 +33,7 @@ public class LandClaim extends JavaPlugin {
   public static StringFlag LandClaimRegionFlag;
   public static Map<String, Claim> claimMap;
   public static Economy econ = null;
+  public static String lang = "en-US";
 
   public void onLoad() {
     FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
@@ -82,6 +83,30 @@ public class LandClaim extends JavaPlugin {
     this.saveConfig();
     this.reloadConfig();
     config = getConfig();
+    lang = config.getString("Localization.Language");
+  }
+
+  public String getLocalizedString(String string) {
+    String baseLocalizationString = "Localization." + lang + ".";
+    String localizedString = "";
+    try {
+      localizedString = config.getString(baseLocalizationString + string);
+    } catch(Exception e){
+      localizedString = config.getString("Localization.en-US."+string);
+    }
+    return localizedString.replace("&", "§");
+  }
+
+  public String getLocalizedString(String string, Boolean removeColors) {
+    String baseLocalizationString = "Localization." + lang + ".";
+    String localizedString = "";
+    try {
+      localizedString = config.getString(baseLocalizationString + string);
+    } catch(Exception e){
+      localizedString = config.getString("Localization.en-US."+string);
+    }
+    if(removeColors) return localizedString.replaceAll("&\\w", "");
+    else return localizedString.replaceAll("&", "§");
   }
 
   private boolean setupEconomy() {

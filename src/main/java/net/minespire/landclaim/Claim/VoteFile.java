@@ -27,7 +27,7 @@ public class VoteFile {
 
   public static void load() {
     voteFile = new VoteFile();
-    voteFile.pathString = "plugins/LandClaim/votes" + ".yml";
+    voteFile.pathString = "plugins/LandClaim/votes.yml";
     voteFile.votesFilePath = Paths.get(voteFile.pathString);
     if (!Files.exists(voteFile.votesFilePath)) {
       try {
@@ -70,6 +70,14 @@ public class VoteFile {
     }
     regionSection.set(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString(), playerUUID);
     return this;
+  }
+
+  public void removeRegion(String regionName, String worldName){
+    String regionSectionName = regionName + "," + worldName;
+    ConfigurationSection regionSection;
+    if ((regionSection = yml.getConfigurationSection(regionSectionName)) != null) {
+      yml.set(regionSectionName, null);
+    }
   }
 
   public Vote getLatestVote(String regionName, String worldName, String playerUUID) {

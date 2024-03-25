@@ -63,21 +63,21 @@ public class Claim {
   public static void teleportToClaim(org.bukkit.entity.Player player, String regionName, String worldName) {
     org.bukkit.World bukkitWorld = Bukkit.getWorld(worldName);
     if (bukkitWorld == null) {
-      player.sendMessage(GUIManager.colorize("&6That world does not exist."));
+      player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_WorldNotFound"));
     } else {
       World world = BukkitAdapter.adapt(bukkitWorld);
       RegionManager rgManager = LandClaim.wg.getPlatform().getRegionContainer().get(world);
       ProtectedRegion region = rgManager.getRegion(regionName);
       if (region == null) {
-        player.sendMessage(GUIManager.colorize("&6That region does not exist."));
+        player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_RegionNotFound"));
       } else {
         if (region.getFlag(Flags.TELE_LOC) != null) {
           player.teleport(new Location(bukkitWorld, region.getFlag(Flags.TELE_LOC).getX(), region.getFlag(Flags.TELE_LOC).getY(), region.getFlag(Flags.TELE_LOC).getZ()));
           BukkitAdapter.adapt(player).setLocation(region.getFlag(Flags.TELE_LOC));
-          player.sendMessage(ChatColor.GOLD + "Teleported to " + ChatColor.DARK_PURPLE + regionName);
+          player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_Teleport").replace("{RegionName}", regionName));
           player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f);
         } else {
-          player.sendMessage(ChatColor.GOLD + "There is no teleport set for this claim.");
+          player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_TeleportNotSet"));
         }
       }
     }
@@ -85,7 +85,7 @@ public class Claim {
 
   public static void setClaimTeleport(org.bukkit.entity.Player player, String regionName, String worldName) {
     if (!player.getWorld().getName().equals(worldName)) {
-      player.sendMessage(ChatColor.GOLD + "You must be standing inside the claim to set a teleport.");
+      player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_SetTeleport"));
     } else {
       World world = BukkitAdapter.adapt(Bukkit.getWorld(worldName));
       RegionManager rgManager = LandClaim.wg.getPlatform().getRegionContainer().get(world);
@@ -109,10 +109,10 @@ public class Claim {
       RegionManager rgManager = LandClaim.wg.getPlatform().getRegionContainer().get(world);
       ProtectedRegion region = rgManager.getRegion(regionName);
       if (region.getFlag(Flags.TELE_LOC) == null) {
-        player.sendMessage(ChatColor.GOLD + "There was no teleport set for this claim.");
+        player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_TeleportNotSet"));
       } else {
         region.setFlag(Flags.TELE_LOC, null);
-        player.sendMessage(ChatColor.GOLD + "You removed the teleport location for " + ChatColor.DARK_PURPLE + regionName + ChatColor.GOLD + ".");
+        player.sendMessage(parsePlaceholders(LandClaim.plugin.getLocalizedString("Messages.Success_RemoveTeleport"), ClaimManager.getClaimByRegionName(regionName)));
         player.closeInventory();
       }
     }
@@ -130,7 +130,7 @@ public class Claim {
     try {
       selection = session.getSelection(this.player.getWorld());
     } catch (IncompleteRegionException e) {
-      bukkitPlayer.sendMessage(ChatColor.GOLD + "You must select two points first.");
+        bukkitPlayer.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NoRegionSelected"));
       return false;
     }
     minPoint = selection.getMinimumPoint();
@@ -143,7 +143,7 @@ public class Claim {
 
     for (ProtectedRegion rg : regions.values()) {
       if (rg.getId().equals(region.getId())) {
-        bukkitPlayer.sendMessage(ChatColor.GOLD + "A region with that name already exists.");
+        bukkitPlayer.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_RegionNameAlreadyInUse"));
         return false;
       }
     }
@@ -156,6 +156,7 @@ public class Claim {
 
     calculateClaimArea();
     calculateClaimCost();
+    ClaimManager.addClaim(this);
     return true;
   }
 
@@ -318,18 +319,20 @@ public class Claim {
     RegionManager rgManager = LandClaim.wg.getPlatform().getRegionContainer().get(world);
     String regionName = Claim.awaitingRemovalConfirmation.get(player.getName()).getId();
     rgManager.removeRegion(regionName);
-    player.sendMessage(ChatColor.GOLD + "You removed claim " + ChatColor.DARK_PURPLE + regionName);
+    player.sendMessage(parsePlaceholders(LandClaim.plugin.getLocalizedString("Messages.Success_ClaimRemoved"), ClaimManager.getClaimByRegionName(regionName)));
+    ClaimManager.removeClaim(ClaimManager.getClaimByRegionName(regionName));
   }
 
   public static void removeRegion(org.bukkit.entity.Player player, String regionName, String worldName) {
     org.bukkit.World bukkitWorld = Bukkit.getWorld(worldName);
     if (bukkitWorld == null) {
-      player.sendMessage(ChatColor.GOLD + "That world does not exist.");
+      player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_WorldNotFound"));
     } else {
       World world = BukkitAdapter.adapt(bukkitWorld);
       RegionManager rgManager = LandClaim.wg.getPlatform().getRegionContainer().get(world);
       rgManager.removeRegion(regionName);
-      player.sendMessage(ChatColor.GOLD + "You removed claim " + ChatColor.DARK_PURPLE + regionName);
+      player.sendMessage(parsePlaceholders(LandClaim.plugin.getLocalizedString("Messages.Success_ClaimRemoved"), ClaimManager.getClaimByRegionName(regionName)));
+      ClaimManager.removeClaim(ClaimManager.getClaimByRegionName(regionName));
     }
   }
 
@@ -470,7 +473,7 @@ public class Claim {
       }
       return false;
     }
-    checkIfOwner.sendMessage(ChatColor.GOLD + "You are not an owner of this claim");
+    checkIfOwner.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NotAnOwner"));
     return false;
   }
 }

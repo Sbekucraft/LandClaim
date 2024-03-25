@@ -1,11 +1,282 @@
-Version: 1.1 # Do not change this
-  
+Version: 1.1
 Claims:
-  Regions:
-    MinSize: 500           # In square blocks (lenth x width).
-    MaxSize: 10000
-    MaxLWRatio: 4          # This determines the maximum ratio of the longest side to the shortest. Example 400 blocks x 100 blocks = 4. This prevents regions that are too long and narrow.
-    PricePerBlock: 1.5     # Area x PricePerBlock = RegionCost
   Plots:
-    PricePerBlock: 0.1     # Volume x PricePerBlock = PlotCost
-    BaseCost: 500          # The lowest price for a plot no matter how small.
+    BaseCost: 500
+    PricePerBlock: 0.1
+  RefundMultiplier: 1.0
+  RefundOnDelete: false
+  Regions:
+    MaxLWRatio: 4
+    MaxSize: 10000
+    MinSize: 500
+    PricePerBlock: 1.5
+Localization:
+  Language: en-US
+  en-US:
+    Economy:
+      Currency: Dollars
+      CurrencySymbol: $
+    GUI:
+      Action_AddMember: Add Member
+      Action_AddOwner: Add Owner
+      Action_AddToClaim: Add Player to Claim
+      Action_Allow: Allow
+      Action_Back: Back
+      Action_ClaimLimits: Claims Limits
+      Action_Claims: Claims
+      Action_Close: Close
+      Action_Confirm: Are you sure?
+      Action_Day: Day
+      Action_DeleteFlag: Delete Flag
+      Action_Deny: Deny
+      Action_FlagEditor: Flag Editor
+      Action_MainMenu_ClaimLimits: Claims Limits
+      Action_MainMenu_Claims: Claims
+      Action_MainMenu_PopularRegions: Popular Regions
+      Action_MainMenu_Wand: Wand
+      Action_ManagePlayers: View/Remove Players
+      Action_Month: Month
+      Action_NewValue: Enter New Value
+      Action_NextPage: Next Page
+      Action_Players: Players
+      Action_PopularRegions: Popuplar Regions
+      Action_PreviousPage: Previous Page
+      Action_Remove: Remove
+      Action_RemoveTpPoint: Remove Teleport Point
+      Action_SetEveryone: Set for everyone
+      Action_SetMembers: Set for members
+      Action_SetNotMembers: Set for non-members
+      Action_SetNotOwners: Set for non-owners
+      Action_SetOwners: Set for owners
+      Action_SetTpPoint: Set Teleport Point
+      Action_Teleport: Teleport
+      Action_TeleportTo: Teleport to
+      Action_Wand: Wand
+      Action_Year: Year
+      Lore_RegionDescription: '&5Region Name: &f{RegionName}|&5Region Cost: &f{RegionCost}|&5Region
+        Size: &f{RegionLength} x {RegionHeight} x {RegionWidth}|&aClick to confirm
+        purchase.'
+      PopupTitle_ClaimPlot: Are You Sure You Want To Claim This Plot?
+      PopupTitle_ClaimRegion: Are You Sure You Want To Claim This Region?
+      Text_AllowedWorlds: '&3Allowed Claim Worlds'
+      Text_Page: Page
+      Text_Plots: '&3Plots'
+      Text_PlotsLore: '&fAllowed: {AllowedPlots}|&fOwned: {OwnedPlots}|&fRemaining: {RemainingPlots}'
+      Text_RegionLore: '&fAllowed: {AllowedRegions}|&fOwned: {OwnedRegions}|&fRemaining: {RemainingRegions}'
+      Text_Regions: '&3Regions'
+      Title_AddMember: Add Player to Claim
+      Title_ClaimFlags: LandClaim Flags
+      Title_ClaimInspector: LandClaim Inspector
+      Title_ClaimLimits: LandClaim Claim Limits
+      Title_ClaimPlot: LandClaim Claim Plot
+      Title_ClaimRegion: LandClaim Claim Region
+      Title_ClaimRemoval: LandClaim Claim Removal
+      Title_ClaimTeleport: LandClaim Teleport
+      Title_Claims: LandClaim Claims
+      Title_DayTopRegions: LandClaim Top Regions - Day
+      Title_MainMenu: LandClaim Main Menu
+      Title_MonthTopRegions: LandClaim Top Regions - Month
+      Title_MembersEditor: Owners/Members Editor
+      Title_RemoveMember: Remove Member
+      Title_RemoveOwner: Remove Owner
+      Title_StateFlagEditor: LandClaim State Flag Editor
+      Title_StringFlagEditor: LandClaim String Flag Editor
+      Title_TopRegions: LandClaim Top Regions
+      Title_YearTopRegions: LandClaim Top Regions - Year
+    Messages:
+      Error_CannotClaim: '&4You don''t have permission to claim or have claimed too
+        many regions.'
+      Error_CannotClaimInWorld: '&4You don''t have permission to claim in this world.'
+      Error_CannotClaimPlot: '&6You may only claim a plot inside a region that you
+        own.'
+      Error_CannotEdit: '&6You cannot edit this claim.'
+      Error_CannotInspect: '&6You cannot inspect that region.'
+      Error_CannotVoteOutsideRegions: '&6You are not standing in any regions. /lc
+        vote [REGION] to vote for a region.'
+      Error_InvalidPlotName: '&6That is not a valid plot name.'
+      Error_InvalidRegionName: '&6That is not a valid region name.'
+      Error_MemberOffline: '&4Could not add member to region. Player must be online.'
+      Error_MissingPermission: '&4You don''t have permission to do that!'
+      Error_NoRegionSelected: '&6You must select two points first.'
+      Error_NotAPlayer: '&4You must be a player to use that command!'
+      Error_NotAnOwner: '&6You are not an owner of this claim.'
+      Error_NotEnoughMoney: '&6You don''t have enough money to claim this region for
+        {RegionCost}.'
+      Error_OverlappingRegions: '&6Your selection overlaps a region belonging to someone
+        else!'
+      Error_OwnerOffline: '&4Could not add owner to region. Player must be online.'
+      Error_RegionFormat: '&6Please format region as &b[region],[worldName]&6. Type
+        /lc world to get the world name.'
+      Error_RegionNameAlreadyInUse: '&6A region with that name already exists.'
+      Error_RegionNotFound: '&6That region does not exist.'
+      Error_SelectionTooLarge: '&6Your selection is too large!'
+      Error_SelectionTooSmall: '&6Your selection is too small!'
+      Error_SetTeleport: '&6You must be standing inside the claim to set a teleport.'
+      Error_TeleportNotSet: '&6There is no teleport set for this claim.'
+      Error_UnmetProportions: '&6Your selection doesn''t meet proportion requirements!'
+      Error_UnspecifiedClaim: '&6You must specify the claim.'
+      Error_VoteTimeout: '&6You must wait {VoteTimeout} days before voting for that
+        region again.'
+      Error_WorldNotFound: '&6That world does not exist.'
+      Help_Teleport: Teleport to a claim with /lc teleport [region],[world]
+      Info_ConfigReloaded: '&6LandClaim config reloaded!'
+      Info_NearbyDisabled: '&6Disabled nearby region viewing.'
+      Info_NearbyEnabled: '&6Enabled nearby region viewing.'
+      Info_PlayerInRegion: '&6You are standing in regions:  '
+      Info_PlayerInWorld: '&6You are in world: &b{WorldName}'
+      Info_VoteRegion: '&6/lc vote [REGION] to pick which region'
+      Prompt_AddMember: '&6Who would you like to add as a memberr? &4/lc cancel&6
+        to cancel.'
+      Prompt_AddOwner: '&6Who would you like to add as an owner? &4/lc cancel&6 to
+        cancel.'
+      Prompt_NewValue: '&6Enter a new value for the {FlagName} flag.'
+      Success_ClaimRemoved: '&6You removed claim &5{RegionName}&6.'
+      Success_ClaimedPlot: '&6You successfully claimed a plot of land for &b{RegionCost}&6.'
+      Success_ClaimedRegion: '&6You successfully claimed a region of land for &b{RegionCost}&6.'
+      Success_FlagEdited: '&6The new value for &b{FlagName}&6 was set on &b{RegionId}&6.'
+      Success_FlagRemoved: '&6Removed flag {FlagName} from &b{RegionName}'
+      Success_MemberAdded: '&6Added &b{PlayerName}&6 as new member to claim &b{RegionId}&6.'
+      Success_OwnerAdded: '&6Added &b{PlayerName}&6 as new owner to claim &b{RegionId}&6.'
+      Success_RecountedVotes: '&6Recounted votes.'
+      Success_RemoveTeleport: '&6You removed the teleport location for &5{RegionName}&6.'
+      Success_RemovedMember: '&6You removed member &b{Player}&6 from &b{RegionName}&6.'
+      Success_RemovedOwner: '&6You removed owner &b{Player}&6 from &b{RegionName}&6.'
+      Success_SetTeleport: '&6You have successfully set the teleport location for
+        &5{RegionName}&6.'
+      Success_Teleport: '&6Teleported to &5{RegionName}&6.'
+      Success_UnclaimedRegion: '&6You successfully unclaimed a region of land for
+        &b{RegionCost} {CurrencySymbol}&6.'
+      Success_VoteRegistered: '&6Vote registered successfully!'
+  it-IT:
+    Economy:
+      Currency: Dollari
+      CurrencySymbol: $
+    GUI:
+      Action_AddMember: Aggiungi Membro
+      Action_AddOwner: Aggiungi proprietario
+      Action_AddToClaim: Aggiungi giocatori all'area
+      Action_Allow: Consenti
+      Action_Back: Indietro
+      Action_ClaimLimits: Limiti dell'area
+      Action_Claims: Zone
+      Action_Close: Chiudi
+      Action_Confirm: Sei Sicuro?
+      Action_Day: Giorno
+      Action_DeleteFlag: Elimina Flag
+      Action_Deny: Negare
+      Action_FlagEditor: Impostazioni Claim
+      Action_MainMenu_ClaimLimits: Limiti dell'area
+      Action_MainMenu_Claims: Area
+      Action_MainMenu_PopularRegions: Aree popolari
+      Action_MainMenu_Wand: Bacchetta di rivendicazione
+      Action_ManagePlayers: Mostra/Rimuovi Giocatori
+      Action_Month: Mese
+      Action_NewValue: Inserisci Nuovo Valore
+      Action_NextPage: Pagina Successiva
+      Action_Players: Giocatori
+      Action_PopularRegions: Aree Popolari
+      Action_PreviousPage: Pagina Precedente
+      Action_Remove: Rimuovi
+      Action_RemoveTpPoint: Rimuovi punto di Viaggio Rapido
+      Action_SetEveryone: Imposta per tutti
+      Action_SetMembers: Imposta per i membri
+      Action_SetNotMembers: Imposta per i non-membri
+      Action_SetNotOwners: Imposta per i non-proprietari
+      Action_SetOwners: Imposta per i proprietari
+      Action_SetTpPoint: Imposta punto di viaggio rapido
+      Action_Teleport: Viaggio Rapido
+      Action_TeleportTo: Viaggia verso
+      Action_Wand: Bacchetta di rivendicazione
+      Action_Year: Anno
+      Lore_RegionDescription: '&5Nome: &f{RegionName}|&5Costo: &f{RegionCost}|&5Dimensione:
+        &f{RegionLength} x {RegionHeight} x {RegionWidth}|&aPremi per confermare l''acquisto.'
+      PopupTitle_ClaimPlot: '&3Sei sicuro di voler rivendicare quest''area?'
+      PopupTitle_ClaimRegion: '&3Sei sicuro di voler rivendicare questa regione?'
+      Text_AllowedWorlds: '&3Mondi consentiti'
+      Text_Page: Pagina
+      Text_Plots: '&3Volumi'
+      Text_PlotsLore: '&fConsentiti: {AllowedPlots}|&fPosseduti: {OwnedPlots}|&fRimanenti: {RemainingPlots}'
+      Text_RegionLore: '&fConsentite: {AllowedRegions}|&fPossedute: {OwnedRegions}|&fRimanenti: {RemainingRegions}'
+      Text_Regions: '&3Regioni'
+      Title_AddMember: Aggiungi giocatore alla regione
+      Title_ClaimFlags: LandClaim Flags
+      Title_ClaimInspector: LandClaim Ispeziona
+      Title_ClaimLimits: LandClaim Limiti dell'area
+      Title_ClaimPlot: LandClaim Rivendica Area
+      Title_ClaimRegion: LandClaim Rivendica Regione
+      Title_ClaimRemoval: LandClaim Rimuovi Regione
+      Title_ClaimTeleport: LandClaim Viaggio Rapido
+      Title_Claims: LandClaim Zone
+      Title_DayTopRegions: LandClaim Regioni Migliori - Giorno
+      Title_MainMenu: LandClaim Menu Principale
+      Title_MonthTopRegions: LandClaim Regioni Migliori - Mese
+      Title_MembersEditor: Modifica Membri/Proprietari
+      Title_RemoveMember: Rimuovi Membro
+      Title_RemoveOwner: Rimuovi Proprietario
+      Title_StateFlagEditor: LandClaim Modifica Flag Di Stato
+      Title_StringFlagEditor: LandClaim Modifica Flag Editor Di Testo
+      Title_TopRegions: LandClaim Regioni Migliori
+      Title_YearTopRegions: LandClaim Regioni Migliori - Anno
+    Messages:
+      Error_CannotClaim: '&4Non hai il permesso di rivendicare o hai troppe aree rivendicate.'
+      Error_CannotClaimInWorld: '&4Non hai il permesso di rivendicare in questo mondo.'
+      Error_CannotClaimPlot: '&6Puoi rivendicare un''area solo all''interno di una
+        regione di cui fai parte.'
+      Error_CannotEdit: '&6Non puoi modificare questa zona.'
+      Error_CannotInspect: '&6Non puoi controllare quella regione.'
+      Error_CannotVoteOutsideRegions: '&6Non ti trovi in nessuna regione. /lc vote
+        [regione] per votare per una regione.'
+      Error_InvalidPlotName: "&6Il nome dell'area non \xE8 valido.."
+      Error_InvalidRegionName: "&6Il nome della regione non \xE8 valido."
+      Error_MemberOffline: '&4Non è stato possibile aggiungere il membro alla zona. Il giocatore dev''essere online.'
+      Error_MissingPermission: '&4Non hai il permesso per farlo!'
+      Error_NoRegionSelected: '&6Devi selezionare due punti.'
+      Error_NotAPlayer: '&4Devi essere un giocatore per usare questo comando!'
+      Error_NotAnOwner: '&6Non sei un proprietario del claim.'
+      Error_NotEnoughMoney: '&6Non hai abbastanza soldi per rivendicare la regione
+        per {RegionCost}.'
+      Error_OverlappingRegions: '&6La tua selezione si sovrappone ad un area rivendicata
+        da un altro giocatore.'
+      Error_OwnerOffline: '&4Non è stato possibile aggiungere il proprietario alla zona. Il giocatore dev''essere online.'
+      Error_RegionFormat: '&6Formatta la regione come &b[regione],[mondo]&6. Usa /lc
+        world per ottenere il nome del mondo.'
+      Error_RegionNameAlreadyInUse: "&6Esiste gi\xE0 una zona con questo nome."
+      Error_RegionNotFound: '&6Questa regione non esiste.'
+      Error_SelectionTooLarge: "&6L'area selezionata \xE8 troppo grande!"
+      Error_SelectionTooSmall: "&6L'area selezionata \xE8 troppo piccola!"
+      Error_SetTeleport: '&6Devi trovarti all''interno di un claim per impostare un
+        punto di teletrasporto.'
+      Error_TeleportNotSet: "&6Non c'\xE8 alcun punto di viaggio rapido impostato\
+        \ per questa regione."
+      Error_UnmetProportions: '&6L''area selezionata non soddisfa i requisiti di proporzione!'
+      Error_UnspecifiedClaim: '&6Devi specificare una regione.'
+      Error_VoteTimeout: '&6Devi attendere {VoteTimeout} giorni prima di poter votare
+        nuovamente per quella regione.'
+      Error_WorldNotFound: '&6Il mondo non esiste.'
+      Help_Teleport: Teletrasportati ad una regione con /lc teleport [region],[world]
+      Info_ConfigReloaded: '&6LandClaim config reloaded!'
+      Info_NearbyDisabled: '&6Disabilitata la visione delle regioni vicine.'
+      Info_NearbyEnabled: '&6Abilitata la visione delle regioni vicine.'
+      Info_PlayerInRegion: '&6Ti trovi nelle regioni:  '
+      Info_PlayerInWorld: '&6Ti trovi nel mondo &b{WorldName}'
+      Info_VoteRegion: '&6/lc vote [regione] per votare per una regione.'
+      Prompt_AddMember: '&6Chi vorresti aggiungere come membro? &4/lc cancel&6 per
+        cancellare.'
+      Prompt_AddOwner: '&6Chi vorresti aggiungere come proprietario? &4/lc cancel&6
+        per cancellare.'
+      Prompt_NewValue: '&6Inserisci un nuovo valore per la flag {FlagName}.'
+      Success_ClaimRemoved: '&6Hai rimosso il claim &5{RegionName} {CurrencySymbol}&6.'
+      Success_ClaimedPlot: '&6Hai rivendicato un''area per &b{RegionCost}&6.'
+      Success_ClaimedRegion: '&6Hai rivendicato una regione per &b{RegionCost} {CurrencySymbol}&6.'
+      Success_FlagEdited: '&6Il nuovo valore per &b{FlagName}&6 è stato impostato per la zona &b{RegionId}&6.'
+      Success_FlagRemoved: '&6Flag {FlagName} rimossa da &b{RegionName}'
+      Success_MemberAdded: '&b{PlayerName}&6 aggiunto come nuovo membro della zona &b{RegionId}&6.'
+      Success_OwnerAdded: '&b{PlayerName}&6 Aggiunto come nuovo proprietario della zona &b{RegionId}&6.'
+      Success_RecountedVotes: '&6Voti ricontati.'
+      Success_RemoveTeleport: '&6Hai rimosso il punto di teletrasporto di &5{RegionName}&6.'
+      Success_RemovedMember: '&6Hai rimosso &b{Player}&6 da &b{RegionName}&6.'
+      Success_RemovedOwner: '&6Hai rimosso il proprietario &b{Player}&6 da &b{RegionName}&6.'
+      Success_SetTeleport: '&6Hai impostato il punto di teletrasporto di &5{RegionName}&6.'
+      Success_Teleport: '&6Viaggio rapido verso &5{RegionName}&6.'
+      Success_UnclaimedRegion: '&6Hai annullato la rivendicazione dell''area per &b{RegionCost}&6.'
+      Success_VoteRegistered: '&6Voti registrati con successo'
