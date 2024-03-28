@@ -4,6 +4,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
+import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.minespire.landclaim.Claim.Claim;
 import net.minespire.landclaim.Claim.Claimer;
@@ -126,17 +127,45 @@ public class GUIManager {
       if ((nextSlot + 1) % 9 == 0) {
         nextSlot = nextSlot + 2;
       }
+      RegionManager rgManager = LandClaim.wg.getPlatform().getRegionContainer().get(BukkitAdapter.adapt(Bukkit.getWorld(rgWorld)));
+      ProtectedRegion region = rgManager.getRegion(rgName);
+      double[] xyz = {(region.getMaximumPoint().getX() - region.getMinimumPoint().getX()), (region.getMaximumPoint().getY() - region.getMinimumPoint().getY()), (region.getMaximumPoint().getZ() - region.getMinimumPoint().getZ())};
+      double[] anchor = {Math.min(region.getMaximumPoint().getX(), region.getMinimumPoint().getX()), Math.max(region.getMaximumPoint().getZ(), region.getMinimumPoint().getZ())};
       if (Claim.playerIsOwnerOrMember(player, rgName, rgWorld).equalsIgnoreCase("Owner")) {
         if (!Claim.regionIsPlot(Bukkit.getWorld(rgWorld), rgName)) {
-          allClaimsGUI.addItem(Material.DIAMOND_BLOCK, colorize("&5" + rgName), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Text_World").replace("{WorldName}",rgWorld)), nextSlot);
+          allClaimsGUI.addItem(Material.DIAMOND_BLOCK, colorize("&5" + rgName), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Lore_ClaimDescription")
+                  .replace("{WorldName}",rgWorld)
+                  .replace("{RegionWidth}", Double.toString(xyz[0]))
+                  .replace("{RegionHeight}", Double.toString(xyz[1]))
+                  .replace("{RegionLength}", Double.toString(xyz[2]))
+                  .replace("{AnchorX}", Double.toString(anchor[0]))
+                  .replace("{AnchorZ}", Double.toString(anchor[1]))), nextSlot);
         } else {
-          allClaimsGUI.addItem(Material.DIAMOND_ORE, colorize("&5" + rgName), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Text_World").replace("{WorldName}",rgWorld)), nextSlot);
+          allClaimsGUI.addItem(Material.DIAMOND_ORE, colorize("&5" + rgName), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Lore_ClaimDescription")
+                  .replace("{WorldName}",rgWorld)
+                  .replace("{RegionWidth}", Double.toString(xyz[0]))
+                  .replace("{RegionHeight}", Double.toString(xyz[1]))
+                  .replace("{RegionLength}", Double.toString(xyz[2]))
+                  .replace("{AnchorX}", Double.toString(anchor[0]))
+                  .replace("{AnchorZ}", Double.toString(anchor[1]))), nextSlot);
         }
       } else if (Claim.playerIsOwnerOrMember(player, rgName, rgWorld).equalsIgnoreCase("Member")) {
         if (!Claim.regionIsPlot(Bukkit.getWorld(rgWorld), rgName)) {
-          allClaimsGUI.addItem(Material.IRON_BLOCK, colorize("&5" + rgName), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Text_World").replace("{WorldName}",rgWorld)), nextSlot);
+          allClaimsGUI.addItem(Material.IRON_BLOCK, colorize("&5" + rgName), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Lore_ClaimDescription")
+                  .replace("{WorldName}",rgWorld)
+                  .replace("{RegionWidth}", Double.toString(xyz[0]))
+                  .replace("{RegionHeight}", Double.toString(xyz[1]))
+                  .replace("{RegionLength}", Double.toString(xyz[2]))
+                  .replace("{AnchorX}", Double.toString(anchor[0]))
+                  .replace("{AnchorZ}", Double.toString(anchor[1]))), nextSlot);
         } else {
-          allClaimsGUI.addItem(Material.IRON_ORE, colorize("&5" + rgName), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Text_World").replace("{WorldName}",rgWorld)), nextSlot);
+          allClaimsGUI.addItem(Material.DIAMOND_ORE, colorize("&5" + rgName), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Lore_ClaimDescription")
+                  .replace("{WorldName}",rgWorld)
+                  .replace("{RegionWidth}", Double.toString(xyz[0]))
+                  .replace("{RegionHeight}", Double.toString(xyz[1]))
+                  .replace("{RegionLength}", Double.toString(xyz[2]))
+                  .replace("{AnchorX}", Double.toString(anchor[0]))
+                  .replace("{AnchorZ}", Double.toString(anchor[1]))), nextSlot);
         }
       }
     }

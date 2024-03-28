@@ -56,6 +56,8 @@ Localization:
       Action_Year: Year
       Lore_ClaimLimitsDescription: '&fView your claim limits'
       Lore_ClaimsDescription: '&fView and edit your|&fregions and plots'
+      Lore_ClaimDescription: '&5World: &f{WorldName}|&5Size: &f{RegionLength} x {RegionHeight} x {RegionWidth}|&5Anchor 
+        Point (NW): &f{AnchorX} {AnchorZ}'
       Lore_RegionDescription: '&5Region Name: &f{RegionName}|&5Region Cost: &f{RegionCost}|&5Region
         Size: &f{RegionLength} x {RegionHeight} x {RegionWidth}|&aClick to confirm
         purchase.'
@@ -214,6 +216,8 @@ Localization:
       Lore_RegionDescription: '&5Nome: &f{RegionName}|&5Costo: &f{RegionCost} {CurrencySymbol}|&5Dimensione:
         &f{RegionLength} x {RegionHeight} x {RegionWidth}|&aPremi per confermare l''acquisto.'
       Lore_RegionMembershipDescription: '&fQuesto darà al|&fgiocatore permessi limitati|&fqu questa zona'
+      Lore_ClaimDescription: '&5Mondo: &f{WorldName}|&5Dimensioni: &f{RegionLength} x {RegionHeight} x {RegionWidth}|&5Punto 
+              Cardine (NW): &f{AnchorX} {AnchorZ}'
       Lore_RegionOwnershipDescription: '&fQuesto darà al|&fgiocatore pieni permessi|&fqu questa zona'
       Lore_RegionRemoveDescription: '&cAttenzione:|&fQuesto eliminerà permanentemente|&fla zona rivendicata'
       Lore_RemoveMemberDescription: '&fRimuovi Membro: &b{PlayerName}|&7UUID:{PlayerUUID}'
