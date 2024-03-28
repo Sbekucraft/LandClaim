@@ -1,8 +1,15 @@
 package net.minespire.landclaim.Listener;
 
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
@@ -27,9 +34,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.BlockVector;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class GUIClick implements Listener {
   public static Map<String, InventoryView> playerLCInventory = new HashMap<>();
@@ -94,6 +103,36 @@ public class GUIClick implements Listener {
                   guiManager.promptForRemoval(player.getName(), regionName, worldName);
                 } else if (itemName.startsWith(LandClaim.plugin.getLocalizedString("GUI.Action_Players"))) {
                   guiManager.openOwnersMembersEditor(player, regionName, worldName);
+                } else if (itemName.startsWith(LandClaim.plugin.getLocalizedString("GUI.Action_ResizeClaim"))){
+                  Region selection = null;
+                  BukkitPlayer bukkitPlayer = BukkitAdapter.adapt(player);
+                  RegionManager rgManager = LandClaim.wg.getPlatform().getRegionContainer().get(BukkitAdapter.adapt(Bukkit.getWorld(worldName)));
+                  ProtectedRegion region = rgManager.getRegion(regionName);
+
+                  LocalSession session = WorldEdit.getInstance().getSessionManager().get(bukkitPlayer);
+                  try {
+                    selection = session.getSelection(bukkitPlayer.getWorld());
+                  } catch (IncompleteRegionException e){
+                    player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NoRegionSelected"));
+                    return;
+                  }
+
+                  int currentArea = (region.getMaximumPoint().getX() - region.getMinimumPoint().getX() + 1) * (region.getMaximumPoint().getZ() - region.getMinimumPoint().getZ() + 1);
+                  int newArea = (selection.getMaximumPoint().getX() - selection.getMinimumPoint().getX() + 1) * (selection.getMaximumPoint().getZ() - selection.getMinimumPoint().getZ() + 1);
+                  double currentAreaPrice = LandClaim.plugin.getConfig().getDouble("Claims.Regions.PricePerBlock") * currentArea;
+
+                  if(newArea < LandClaim.plugin.getConfig().getDouble("Claims.Regions.MinSize")){
+                    player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_SelectionTooSmall"));
+                    return;
+                  }
+                  else if (newArea > LandClaim.plugin.getConfig().getDouble("Claims.Regions.MaxSize")){
+                    player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_SelectionTooBig"));
+                    return;
+                  }
+
+                  Claim newClaim = new Claim(player, UUID.randomUUID().toString(), worldName);
+                  newClaim.createClaim();
+                  guiManager.openConfirmResizeGUI(player, regionName, worldName, newClaim, (newClaim.getClaimCost() - currentAreaPrice));
                 } else if (itemName.startsWith(LandClaim.plugin.getLocalizedString("GUI.Action_FlagEditor"))) {
                   guiManager.openFlagsGUI(player, regionName, worldName);
                 } else if (itemName.startsWith(LandClaim.plugin.getLocalizedString("GUI.Action_Teleport"))) {
@@ -102,6 +141,81 @@ public class GUIClick implements Listener {
                   guiManager.openAllClaimsGUI(player);
                 } else if (ChatColor.stripColor(itemName).equalsIgnoreCase(LandClaim.plugin.getLocalizedString("GUI.Action_Close"))) {
                   player.closeInventory();
+                }
+              } else if(inventoryTitle.equals(LandClaim.plugin.getLocalizedString("GUI.Title_ClaimResize"))){
+                if (itemName.startsWith(LandClaim.plugin.getLocalizedString("GUI.Action_Back"))) {
+                  guiManager.openMainGUI(player);
+                } else if (itemName.startsWith(LandClaim.plugin.getLocalizedString("GUI.Action_Close"))) {
+                  player.closeInventory();
+                } else if (itemName.startsWith(LandClaim.plugin.getLocalizedString("GUI.PopupTitle_ClaimRegion", true)) || itemName.startsWith(LandClaim.plugin.getLocalizedString("GUI.PopupTitle_ClaimPlot", true))) {
+                  // YOOOO
+                  try{
+                    regionName = ChatColor.stripColor(clickEvent.getClickedInventory().getItem(29).getItemMeta().getDisplayName());
+                    worldName = ChatColor.stripColor(clickEvent.getClickedInventory().getItem(29).getItemMeta().getLore().get(0)).substring(7);
+                  } catch(NullPointerException e){
+                    System.out.print(e.toString());
+                    player.closeInventory();
+                    return;
+                  }
+                  regionName = ChatColor.stripColor(clickEvent.getClickedInventory().getItem(29).getItemMeta().getDisplayName());
+                  worldName = ChatColor.stripColor(clickEvent.getClickedInventory().getItem(29).getItemMeta().getLore().get(0)).substring(7);
+                  BukkitPlayer bukkitPlayer = BukkitAdapter.adapt(player);
+                  RegionManager rgManager = LandClaim.wg.getPlatform().getRegionContainer().get(BukkitAdapter.adapt(Bukkit.getWorld(worldName)));
+                  ProtectedRegion region = rgManager.getRegion(regionName);
+                  LocalSession session = WorldEdit.getInstance().getSessionManager().get(bukkitPlayer);
+                  player.closeInventory();
+                  Region selection = null;
+                  try {
+                    selection = session.getSelection(bukkitPlayer.getWorld());
+                  } catch (IncompleteRegionException e){
+                    player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_NoRegionSelected"));
+                    return;
+                  }
+
+                  int currentArea = (region.getMaximumPoint().getX() - region.getMinimumPoint().getX() + 1) * (region.getMaximumPoint().getZ() - region.getMinimumPoint().getZ() + 1);
+                  int newArea = (selection.getMaximumPoint().getX() - selection.getMinimumPoint().getX() + 1) * (selection.getMaximumPoint().getZ() - selection.getMinimumPoint().getZ() + 1);
+                  double currentAreaPrice = LandClaim.plugin.getConfig().getDouble("Claims.Regions.PricePerBlock") * currentArea;
+                  double newAreaPrice = LandClaim.plugin.getConfig().getDouble("Claims.Regions.PricePerBlock") * newArea;
+                  double priceDiff = Math.abs(newAreaPrice - currentAreaPrice);
+
+                  Map<com.sk89q.worldguard.protection.flags.Flag<?>, Object> flags = region.getFlags();
+                  DefaultDomain owners = region.getOwners();
+                  DefaultDomain members = region.getMembers();
+
+                  Boolean isRegion = region.getFlag(LandClaim.LandClaimRegionFlag) != null && "region".equals(region.getFlag(LandClaim.LandClaimRegionFlag));
+                  rgManager.removeRegion(regionName);
+
+                  Claim newClaim = new Claim(player, regionName, worldName);
+
+                  if (!newClaim.createClaim()) {
+                    return;
+                  }
+                  if (newClaim.overlapsUnownedRegion()) {
+                    player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Error_OverlappingRegions"));
+                    return;
+                  }
+
+                  region = rgManager.getRegion(regionName);
+                  if(newAreaPrice > currentAreaPrice){
+                    if(LandClaim.econ.has(player, priceDiff)){
+                      LandClaim.econ.withdrawPlayer(player, priceDiff);
+                      player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_WithdrawnMoney").replace("{Amount}", Double.toString(priceDiff)).replace("{CurrencySymbol}", LandClaim.plugin.getLocalizedString("Economy.CurrencySymbol")));
+                    }
+                  }else if(newAreaPrice < currentAreaPrice && LandClaim.plugin.getConfig().getBoolean("Claims.RefundOnDelete") && isRegion){
+                    double refundMultiplier = LandClaim.plugin.getConfig().getDouble("Claims.RefundMultiplier");
+                    double refundAmount = priceDiff;
+                    if (refundMultiplier >= 0) refundAmount = priceDiff * refundMultiplier;
+                    LandClaim.econ.depositPlayer(player, refundAmount);
+                    player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_DepositedMoney").replace("{Amount}", Double.toString(priceDiff)).replace("{CurrencySymbol}", LandClaim.plugin.getLocalizedString("Economy.CurrencySymbol")));
+                  }
+
+
+                  newClaim.setFlags(flags);
+                  newClaim.setMembers(members);
+                  newClaim.setOwners(owners);
+                  newClaim.createClaim();
+                  newClaim.saveClaim(true);
+
                 }
               }
               else if(inventoryTitle.equals(LandClaim.plugin.getLocalizedString("GUI.Title_MembersEditor"))){
@@ -125,7 +239,7 @@ public class GUIClick implements Listener {
                   ProtectedRegion region = rgManager.getRegion(regionName);
                   double area = (region.getMaximumPoint().getX() - region.getMinimumPoint().getX() + 1) * (region.getMaximumPoint().getZ() - region.getMinimumPoint().getZ() + 1);
                   double cost = LandClaim.plugin.getConfig().getDouble("Claims.Regions.PricePerBlock") * area;
-                  if (LandClaim.plugin.getConfig().getBoolean("Claims.RefundOnDelete")) {
+                  if (LandClaim.plugin.getConfig().getBoolean("Claims.RefundOnDelete") && region.getFlag(LandClaim.LandClaimRegionFlag) != null && "region".equals(region.getFlag(LandClaim.LandClaimRegionFlag))) {
                     double refundMultiplier = LandClaim.plugin.getConfig().getDouble("Claims.RefundMultiplier");
                     double refundAmount;
                     if (refundMultiplier >= 0) refundAmount = cost * refundMultiplier;
@@ -135,6 +249,7 @@ public class GUIClick implements Listener {
                             .replace("{CurrencySymbol}", LandClaim.plugin.getLocalizedString("Economy.CurrencySymbol"))
                             .replace("{CurrencyName}", LandClaim.plugin.getLocalizedString("Economy.Currency")));
                     LandClaim.econ.depositPlayer(player, refundAmount);
+                    player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_DepositedMoney").replace("{Amount}", Double.toString(refundAmount)).replace("{CurrencySymbol}", LandClaim.plugin.getLocalizedString("Economy.CurrencySymbol")));
                   }
                   try {
                     Claim.removeRegion(player, regionName, worldName);
@@ -369,6 +484,7 @@ public class GUIClick implements Listener {
                             player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_ClaimedPlot").replace("{RegionCost}", Double.toString(claim.getClaimCost())));
                           }
                           LandClaim.econ.withdrawPlayer(player, claim.getClaimCost());
+                          player.sendMessage(LandClaim.plugin.getLocalizedString("Messages.Success_WithdrawnMoney").replace("{Amount}", Double.toString(claim.getClaimCost())).replace("{CurrencySymbol}", LandClaim.plugin.getLocalizedString("Economy.CurrencySymbol")));
                           player.closeInventory();
                           return;
                         }

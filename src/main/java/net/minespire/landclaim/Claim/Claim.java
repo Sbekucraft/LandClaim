@@ -40,6 +40,10 @@ public class Claim {
   public static Map<String, List<String>> playerClaimsMap = new HashMap<>();
   public static Map<String, ProtectedRegion> awaitingRemovalConfirmation = new HashMap<>();
 
+  private Map<com.sk89q.worldguard.protection.flags.Flag<?>, Object> flags = null;
+  private DefaultDomain owners = null;
+  private DefaultDomain members = null;
+
   public Claim(org.bukkit.entity.Player player, String rgName) {
     this.player = BukkitAdapter.adapt(player);
     this.bukkitPlayer = player;
@@ -58,6 +62,18 @@ public class Claim {
     this.bukkitPlayer = player;
     this.rgName = rgName;
     this.world = BukkitAdapter.adapt(Bukkit.getWorld(worldName));
+  }
+
+  public void setFlags(Map<com.sk89q.worldguard.protection.flags.Flag<?>, Object> flags) {
+    this.flags = flags;
+  }
+
+  public void setOwners(DefaultDomain owners) {
+    this.owners = owners;
+  }
+
+  public void setMembers(DefaultDomain members) {
+    this.members = members;
   }
 
   public static void teleportToClaim(org.bukkit.entity.Player player, String regionName, String worldName) {
@@ -154,6 +170,10 @@ public class Claim {
       region.setFlag(LandClaim.LandClaimRegionFlag, "plot");
     }
 
+    if(this.flags != null) region.setFlags(this.flags);
+    if(this.members != null) region.setMembers(this.members);
+    if(this.owners != null) region.setOwners(this.owners);
+
     calculateClaimArea();
     calculateClaimCost();
     ClaimManager.addClaim(this);
@@ -205,6 +225,15 @@ public class Claim {
     DefaultDomain owner = new DefaultDomain();
     owner.addPlayer(player.getUniqueId());
     region.setOwners(owner);
+  }
+
+  public void saveClaim(Boolean skipOwners) {
+    rgManager.addRegion(region);
+    if(skipOwners) {
+      DefaultDomain owner = new DefaultDomain();
+      owner.addPlayer(player.getUniqueId());
+      region.setOwners(owner);
+    }
   }
 
   public boolean overlapsUnownedRegion() {
@@ -343,7 +372,8 @@ public class Claim {
       .replace("{PlayerName}", claim.getPlayerName())
       .replace("{RegionLength}", String.valueOf(claim.getClaimLength()))
       .replace("{RegionWidth}", String.valueOf(claim.getClaimWidth()))
-      .replace("{RegionHeight}", String.valueOf(claim.getClaimHeight()));
+      .replace("{RegionHeight}", String.valueOf(claim.getClaimHeight()))
+      .replace("{CurrencySymbol}", LandClaim.plugin.getLocalizedString("Economy.CurrencySymbol"));
   }
 
   public static List<String> getClaimListOwner(org.bukkit.entity.Player player, boolean getPlots) {

@@ -29,6 +29,7 @@ Localization:
       Action_Day: Day
       Action_DeleteFlag: Delete Flag
       Action_Deny: Deny
+      Action_ResizeClaim: Resize Claim Area
       Action_FlagEditor: Flag Editor
       Action_MainMenu_ClaimLimits: Claims Limits
       Action_MainMenu_Claims: Claims
@@ -88,6 +89,7 @@ Localization:
       Title_ClaimRegion: LandClaim Claim Region
       Title_ClaimRemoval: LandClaim Claim Removal
       Title_ClaimTeleport: LandClaim Teleport
+      Title_ClaimResize: LandClaim Claim Resize
       Title_Claims: LandClaim Claims
       Title_DayTopRegions: LandClaim Top Regions - Day
       Title_MainMenu: LandClaim Main Menu
@@ -149,6 +151,7 @@ Localization:
       Success_ClaimRemoved: '&6You removed claim &5{RegionName}&6.'
       Success_ClaimedPlot: '&6You successfully claimed a plot of land for &b{RegionCost}&6.'
       Success_ClaimedRegion: '&6You successfully claimed a region of land for &b{RegionCost}&6.'
+      Success_DepositedMoney: '&b{Amount} {CurrencySymbol}&6 have been deposited to your account due to a shrink in your claimed area, or its elimination.'
       Success_FlagEdited: '&6The new value for &b{FlagName}&6 was set on &b{RegionId}&6.'
       Success_FlagRemoved: '&6Removed flag {FlagName} from &b{RegionName}'
       Success_MemberAdded: '&6Added &b{PlayerName}&6 as new member to claim &b{RegionId}&6.'
@@ -163,6 +166,7 @@ Localization:
       Success_UnclaimedRegion: '&6You successfully unclaimed a region of land for
         &b{RegionCost} {CurrencySymbol}&6.'
       Success_VoteRegistered: '&6Vote registered successfully!'
+      Success_WithdrawnMoney: '&b{Amount} {CurrencySymbol}&6 has been withdrawn from your amount to create your claim.'
   it-IT:
     Economy:
       Currency: Dollari
@@ -180,6 +184,7 @@ Localization:
       Action_Day: Giorno
       Action_DeleteFlag: Elimina Flag
       Action_Deny: Negare
+      Action_ResizeClaim: Ridimensiona Area
       Action_FlagEditor: Impostazioni Claim
       Action_MainMenu_ClaimLimits: Limiti dell'area
       Action_MainMenu_Claims: Area
@@ -206,7 +211,7 @@ Localization:
       Action_Year: Anno
       Lore_ClaimLimitsDescription: '&fVedi i limiti della tua rivendicazione'
       Lore_ClaimsDescription: '&fVedi e modifica le tue|&regioni e volumi'
-      Lore_RegionDescription: '&5Nome: &f{RegionName}|&5Costo: &f{RegionCost}|&5Dimensione:
+      Lore_RegionDescription: '&5Nome: &f{RegionName}|&5Costo: &f{RegionCost} {CurrencySymbol}|&5Dimensione:
         &f{RegionLength} x {RegionHeight} x {RegionWidth}|&aPremi per confermare l''acquisto.'
       Lore_RegionMembershipDescription: '&fQuesto darà al|&fgiocatore permessi limitati|&fqu questa zona'
       Lore_RegionOwnershipDescription: '&fQuesto darà al|&fgiocatore pieni permessi|&fqu questa zona'
@@ -237,6 +242,7 @@ Localization:
       Title_ClaimPlot: LandClaim Rivendica Area
       Title_ClaimRegion: LandClaim Rivendica Regione
       Title_ClaimRemoval: LandClaim Rimuovi Regione
+      Title_ClaimResize: LandClaim Claim Ridimensiona
       Title_ClaimTeleport: LandClaim Viaggio Rapido
       Title_Claims: LandClaim Zone
       Title_DayTopRegions: LandClaim Regioni Migliori - Giorno
@@ -300,6 +306,7 @@ Localization:
       Success_ClaimRemoved: '&6Hai rimosso il claim &5{RegionName} {CurrencySymbol}&6.'
       Success_ClaimedPlot: '&6Hai rivendicato un''area per &b{RegionCost}&6.'
       Success_ClaimedRegion: '&6Hai rivendicato una regione per &b{RegionCost} {CurrencySymbol}&6.'
+      Success_DepositedMoney: '&b{Amount} {CurrencySymbol}&6 sono stati depositati sul tuo bilancio a causa della riduzione o rimozione di una tua area rivendicata.'
       Success_FlagEdited: '&6Il nuovo valore per &b{FlagName}&6 è stato impostato per la zona &b{RegionId}&6.'
       Success_FlagRemoved: '&6Flag {FlagName} rimossa da &b{RegionName}'
       Success_MemberAdded: '&b{PlayerName}&6 aggiunto come nuovo membro della zona &b{RegionId}&6.'
@@ -312,3 +319,4 @@ Localization:
       Success_Teleport: '&6Viaggio rapido verso &5{RegionName}&6.'
       Success_UnclaimedRegion: '&6Hai annullato la rivendicazione dell''area per &b{RegionCost} {CurrencySymbol}&6.'
       Success_VoteRegistered: '&6Voti registrati con successo'
+      Success_WithdrawnMoney: '&b{Amount} {CurrencySymbol}&6 sono stati rimossi dal tuo bilancio per rivendicare l''area.'

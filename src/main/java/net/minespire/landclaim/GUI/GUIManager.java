@@ -59,7 +59,7 @@ public class GUIManager {
   public void openMainGUI(Player player) {
     NGUI mainGUI = new NGUI(9, LandClaim.plugin.getLocalizedString("GUI.Title_MainMenu"));
     mainGUI.addItem(Material.GRASS_BLOCK, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Claims")), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Lore_ClaimsDescription")));
-    mainGUI.addItem(Material.WOODEN_AXE, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Wand")), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Lore_WandDescription")));
+    mainGUI.addItem(Material.STICK, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Wand")), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Lore_WandDescription")));
     mainGUI.addItem(Material.OBSERVER, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_ClaimLimits")), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Lore_ClaimLimitsDescription")));
     mainGUI.addItem(Material.EMERALD, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_PopularRegions")), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Lore_TopDescription")));
     mainGUI.addItem(Material.BIRCH_DOOR, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Close")), null, 8);
@@ -171,10 +171,12 @@ public class GUIManager {
   }
 
   public void openClaimInspector(Player player, String regionName, String worldName) {
-    //ProtectedRegion region = LandClaim.wg.getPlatform().getRegionContainer().get(BukkitAdapter.adapt(player.getWorld())).getRegion(regionName);
+    ProtectedRegion region = LandClaim.wg.getPlatform().getRegionContainer().get(BukkitAdapter.adapt(player.getWorld())).getRegion(regionName);
+    Boolean isRegion = region.getFlag(LandClaim.LandClaimRegionFlag) != null && "region".equals(region.getFlag(LandClaim.LandClaimRegionFlag));
     NGUI inspectorGUI = new NGUI(18, LandClaim.plugin.getLocalizedString("GUI.Title_ClaimInspector"));
 
     inspectorGUI.addItem(Material.PLAYER_HEAD, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Players")), null);
+    if(isRegion) inspectorGUI.addItem(Material.CRAFTING_TABLE, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_ResizeClaim")), null);
     if (player.hasPermission("landclaim.teleport") || player.hasPermission("landclaim.inspect.others")) {
       inspectorGUI.addItem(Material.ENDER_PEARL, colorize(LandClaim.plugin.getLocalizedString("GUI.Action_Teleport")), null);
     }
@@ -282,6 +284,16 @@ public class GUIManager {
     teleportGUI.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
     teleportGUI.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
     teleportGUI.open(player);
+  }
+
+  public void openConfirmResizeGUI(Player player, String regionName, String worldName, Claim claim, double cost){
+    NGUI claimGUI = new NGUI(36, LandClaim.plugin.getLocalizedString("GUI.Title_ClaimResize"));
+    claimGUI.addItem(Material.BIRCH_SIGN, colorize("&5" + regionName), parseLoreString(LandClaim.plugin.getLocalizedString("GUI.Text_World").replace("{WorldName}",worldName)), 29);
+    claimGUI.addItem(Material.GRASS_BLOCK, LandClaim.plugin.getLocalizedString("GUI.PopupTitle_ClaimRegion"), this.parseLoreString(Claim.parsePlaceholders(LandClaim.plugin.getLocalizedString("GUI.Lore_RegionDescription").replace("{RegionName}", regionName).replace("{RegionCost}", Double.toString(cost)), claim)), 13);
+    claimGUI.addItem(Material.ARROW, LandClaim.plugin.getLocalizedString("GUI.Action_Back"), null, 31);
+    claimGUI.addItem(Material.BIRCH_DOOR, LandClaim.plugin.getLocalizedString("GUI.Action_Close"), null, 33);
+    claimGUI.open(player);
+    Claim.queueForRemoval(player.getName(), claim.getRegionName());
   }
 
   public void openFlagsGUI(Player player, String regionName, String worldName) {
